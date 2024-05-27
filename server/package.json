@@ -1,0 +1,26 @@
+{
+  "name": "forum-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.13.0",
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^10.0.0",
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/node": "^20.12.11",
+    "prisma": "^5.13.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
