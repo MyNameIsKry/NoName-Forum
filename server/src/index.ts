@@ -1,6 +1,7 @@
 import Fastify from 'fastify'
 import { PrismaConnect } from './connectToDB'
-import { authRoutes, userRoutes } from './routes/authRoute'
+import { authRoutes } from './routes/authRoute'
+import { userRoutes } from './routes/userRoute'
 import authMiddleware from './middlewares/authMiddleware'
 
 const fastify = Fastify({
