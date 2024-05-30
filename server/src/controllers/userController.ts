@@ -9,7 +9,6 @@ export class UserController {
     public static async getUserInfo(req: FastifyRequest<{ Querystring: IQuery }>, res: FastifyReply) {
         try {
             const { email } = req.query;
-            console.log(email);
             const userInfo = await UserService.getUserInfo(email);  
             res.send(userInfo);
         } catch (error) {

@@ -23,7 +23,7 @@ export class AuthService {
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser)
-            throw new Error("Email đã tồn tại");
+            return { error: "Email đã tồn tại" };
 
         const salt = await genSalt(10);
         const hashedPassword = await hash(password, salt);
@@ -36,31 +36,22 @@ export class AuthService {
                 registered_at: new Date()
             }
         });
-
-        const token = jwt.sign(
-            { userId: user.id, role: user.role },
-            envConfig?.SESSION_TOKEN_SECRET as string,
-            { expiresIn: "30s" }
-        );
         
-        return { user, token }
+        return { user }
     }
 
     public static async login(data: LoginRequestBody) {
         const { email, password } = data;
 
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) 
-            throw new Error("Sai email hoặc password.");
 
-        const isMatch = await compare(password, user.password);
-        if (!isMatch)
-            throw new Error("Sai email hoặc password.");
+        if (!user || !(await compare(password, user.password))) {
+            return { error: "Email hoặc password sai!" };
+        }
 
         const token = jwt.sign(
             { userId: user.id, role: user.role },
             envConfig?.SESSION_TOKEN_SECRET as string,
-            { expiresIn: "30s" }
         );
 
         console.log(token);

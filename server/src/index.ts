@@ -12,9 +12,10 @@ fastify.get('/', (request, reply) => {
   reply.send("Hello world!")
 })
 
-fastify.register(authRoutes);
+fastify.register(authRoutes, { prefix: "/auth" });
 fastify.register(userRoutes);
-fastify.register(authMiddleware);
+
+authMiddleware(fastify);
 
 const start = async () => {
     fastify.listen({ port: 3300 }, (err, address) => {
