@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 // Define a custom interface for the user object
 interface User {
-  userId: string;
+  username: string;
 }
 
 // Extend the FastifyRequest interface to include the user property
@@ -15,11 +15,6 @@ declare module 'fastify' {
 
 async function authMiddleware(fastify: FastifyInstance) {
   fastify.addHook('preHandler', async (req: FastifyRequest, res: FastifyReply) => {
-    // Skip authorization check for login and register routes
-    const publicRoutes = ['/auth/login', '/auth/register'];
-    if (publicRoutes.includes(req.routeOptions.url!)) {
-      return;
-    }
 
     try {
       const token = req.headers.authorization?.split(' ')[1];
@@ -31,7 +26,7 @@ async function authMiddleware(fastify: FastifyInstance) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
       if (!decoded || typeof decoded !== 'object' || !('userId' in decoded)) {
-        throw new Error('Invalid token');
+        return res.status(403).send({ error: "Invalid Token" })
       }
 
       // Assign the decoded user object to the request
