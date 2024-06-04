@@ -11,12 +11,42 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String
+  id String @id @default(cuid()) 
+  username String @unique
+  display_name String
   email String @unique
   password String
   role String @default("user")
   bio String?
   avatar_url String?
+  refresh_token String?
+  updated_at DateTime
   registered_at DateTime
+  posts Post[]
+  comments Comment[]
+  @@index([id])
+}
+
+model Post {
+  id String @id @default(cuid())
+  author_id String
+  author_name String
+  title String
+  content String
+  created_at DateTime
+  updated_at DateTime
+  author User @relation(fields: [author_id], references: [id])
+  comments Comment[]
+}
+
+model Comment {
+  id String @id @default(cuid())
+  post_id String
+  author_id String
+  author_name String
+  content String
+  created_at DateTime
+  update_at DateTime
+  author User @relation(fields: [author_id], references: [id])
+  post Post @relation(fields: [post_id], references: [id])
 }
