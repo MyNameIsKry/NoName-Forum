@@ -3,7 +3,10 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 // Define a custom interface for the user object
 interface User {
+  userId: string;
+  role: string;
   username: string;
+  displayName: string;
 }
 
 // Extend the FastifyRequest interface to include the user property

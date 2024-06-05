@@ -12,7 +12,12 @@ export class GenerateToken {
 
     public generate(user: User) {
         return jwt.sign(
-            { userId: user.id, role: user.role },
+            { 
+                userId: user.id, 
+                role: user.role,
+                username: user.username,
+                displayName: user.display_name
+            },
             envConfig?.JWT_SECRET as string,
             { expiresIn: this.expiresIn }
         )
