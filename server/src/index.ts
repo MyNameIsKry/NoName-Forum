@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import { PrismaConnect } from './connectToDB'
 import { authRoutes } from './routes/authRoute'
 import { userRoutes } from './routes/userRoute'
+import { postRoutes } from './routes/postRoute'
 import cookie from "@fastify/cookie"
 import type { FastifyCookieOptions } from '@fastify/cookie'
 import envConfig from './config'
@@ -20,7 +21,8 @@ fastify.get('/', (request, reply) => {
 })
 
 fastify.register(authRoutes, { prefix: "/auth" });
-fastify.register(userRoutes);
+fastify.register(userRoutes, { prefix: "/user" });
+fastify.register(postRoutes, { prefix: "/post" });
 
 const start = async () => {
     fastify.listen({ port: 3300 }, (err, address) => {
