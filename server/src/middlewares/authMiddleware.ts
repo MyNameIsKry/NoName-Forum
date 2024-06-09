@@ -20,6 +20,11 @@ async function authMiddleware(fastify: FastifyInstance) {
   fastify.addHook('preHandler', async (req: FastifyRequest, res: FastifyReply) => {
 
     try {
+      const publicRoutes = ['/posts/all'];
+      if (publicRoutes.includes(req.routerPath)) {
+        return;
+      }
+      
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
         return res.status(401).send({ error: 'Unauthorized' });
