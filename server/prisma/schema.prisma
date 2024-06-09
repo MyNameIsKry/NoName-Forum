@@ -5,6 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -20,8 +24,8 @@ model User {
   bio String?
   avatar_url String?
   refresh_token String?
-  updated_at DateTime
-  registered_at DateTime
+  updated_at DateTime @updatedAt
+  registered_at DateTime @default(now())
   posts Post[]
   comments Comment[]
   @@index([id])
@@ -33,10 +37,20 @@ model Post {
   author_name String
   title String
   content String
-  created_at DateTime
-  updated_at DateTime
+  created_at DateTime @default(now()) 
+  updated_at DateTime @updatedAt
+  category_name String
   author User @relation(fields: [author_id], references: [id])
+  category Category @relation(fields: [category_name], references: [name])
   comments Comment[]
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  posts Post[]
 }
 
 model Comment {
@@ -45,8 +59,8 @@ model Comment {
   author_id String
   author_name String
   content String
-  created_at DateTime
-  update_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   author User @relation(fields: [author_id], references: [id])
   post Post @relation(fields: [post_id], references: [id])
 }
