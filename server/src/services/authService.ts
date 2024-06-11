@@ -75,7 +75,7 @@ export class AuthService {
 
     public static async refreshToken(token: string) {
         try {
-            const payload = jwt.verify(token, envConfig?.JWT_SECRET as string) as { userId: string, role: string }; 
+            const payload = jwt.verify(token, envConfig?.JWT_SECRET as string) as { userId: string, role: string, username: string, displayName: string }; 
             const user = await prisma.user.findUnique({ where: { id: payload.userId } });
 
             if (!user)
@@ -99,7 +99,7 @@ export class AuthService {
 
     public static async logout(refreshToken: string) {
         try {
-            const payload = jwt.verify(refreshToken, envConfig?.JWT_SECRET as string) as { userId: string, role: string }; 
+            const payload = jwt.verify(refreshToken, envConfig?.JWT_SECRET as string) as { userId: string, role: string, username: string, displayName: string }; 
             const user = await prisma.user.findUnique({ where: { id: payload.userId } });
 
             await prisma.user.update({
