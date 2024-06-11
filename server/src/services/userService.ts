@@ -1,4 +1,5 @@
 import { prisma } from "..";
+import Joi from "joi";
 
 export interface ChangeDisplayNameRequestBody {
     displayName: string;
@@ -32,8 +33,6 @@ export class UserService {
                         title: true,
                         content: true,
                         created_at: true,
-                        updated_at: true,
-                        comments: true,
                     }
                 },
             }
@@ -60,6 +59,12 @@ export class UserService {
 
     public static async changeDisplayName(userId: string, displayName: string) {
         try {
+            const displayNameSchema = Joi.object({
+                displayName: Joi.string().alphanum().min(2).max(15).required()
+            });
+            const { error } = displayNameSchema.validate({displayName: displayName});
+            if (error)
+                return { error: error.message };
             await prisma.user.update({
                 where: { id: userId },
                 data: {
@@ -69,6 +74,22 @@ export class UserService {
 
             return { message: "Thay đổi display_name thành công!" };
         } catch (err) {
+            console.log(err);
+            return {error: err instanceof Error ? err.message : "An unknown error occured" };
+        }
+    }
+
+    public static async changeBio(userId: string, bio: string) {
+        try {
+            await prisma.user.update({
+                where: { id: userId },
+                data: {
+                    bio: bio
+                }
+            });
+
+            return { message: "Thay đổi bio thành công" };
+        } catch(err) {
             console.log(err);
             return {error: err instanceof Error ? err.message : "An unknown error occured" };
         }

@@ -57,4 +57,29 @@ export class UserController {
             res.status(500).send({error: err instanceof Error ? err.message : "An unknown error occured" });
         }
     }
+
+    public static async changeBio(req: FastifyRequest<{ Body: { bio: string } }>, res: FastifyReply) {
+        try {
+            const userId = req.user?.userId;
+
+            if (!userId)
+                return res.status(403).send({ error: "User is not authentiacted" })
+
+            const { bio } = req.body;
+
+            if (!bio) 
+                return res.status(400).send({ error: "bio field invalid!" });
+            
+            const result = await UserService.changeBio(userId, bio);
+
+            if ('error' in result)
+                res.status(400).send(result);
+            else
+                res.status(201).send(result);
+
+        } catch(err) {
+            console.log(err);
+            res.status(500).send({error: err instanceof Error ? err.message : "An unknown error occured" });
+        }
+    }
 }
