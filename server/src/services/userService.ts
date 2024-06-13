@@ -60,7 +60,7 @@ export class UserService {
     public static async changeDisplayName(userId: string, displayName: string) {
         try {
             const displayNameSchema = Joi.object({
-                displayName: Joi.string().alphanum().min(2).max(15).required()
+                displayName: Joi.string().min(2).max(15).required()
             });
             const { error } = displayNameSchema.validate({displayName: displayName});
             if (error)
