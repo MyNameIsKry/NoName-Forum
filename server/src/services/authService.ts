@@ -3,11 +3,13 @@ import { prisma } from '..';
 import envConfig from '../config';
 import { GenerateToken } from '../utils/generateToken';
 import jwt from "jsonwebtoken";
+import Joi from 'joi';
 //import { createTransport } from "nodemailer";
 
 export interface RegisterRequestBody {
     email: string;
     password: string;
+    repeatPassword: string;
     username: string;
 }
 
@@ -20,16 +22,34 @@ export class AuthService {
     constructor() {}
 
     public static async register(data: RegisterRequestBody) {
-        const { username, password, email } = data;
+        const { username, password, email, repeatPassword } = data;
+
+        const schema = Joi.object({
+            username: Joi.string().min(3).max(35),
+            password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+            repeatPassword: Joi.ref('password')
+        });
+
+        const { error } = schema.validate({
+            username: username,
+            password: password,
+            repeatPassword: repeatPassword
+        });
+
+        if (error)
+            return { error: error };
 
         const existingUserEmail = await prisma.user.findUnique({ where: { email } });
-        const existingUsername = await prisma.user.findUnique({ where: { username } })
+        const existingUsername = await prisma.user.findUnique({ where: { username } });
 
         if (existingUserEmail)
             return { error: "Email đã tồn tại" };
 
         if (existingUsername)
             return { error: "Username đã tồn tại" };
+
+        if (password !== repeatPassword)
+            return { error: "Mật khẩu không khớp với nhau" };
 
         const salt = await genSalt(10);
         const hashedPassword = await hash(password, salt);

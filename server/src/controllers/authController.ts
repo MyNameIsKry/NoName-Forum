@@ -4,8 +4,8 @@ import { AuthService, LoginRequestBody, RegisterRequestBody } from '../services/
 export class AuthController {
     public static async register(req: FastifyRequest<{ Body: RegisterRequestBody }>, res: FastifyReply) {
         try {
-            const { email, password, username } = req.body;
-            const result = await AuthService.register({ email, password, username });
+            const { email, password, username, repeatPassword } = req.body;
+            const result = await AuthService.register({ email, password, username, repeatPassword });
             res.status(201).send(result);
         } catch (error) {
             res.status(400).send({ error: error });
