@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
-import { PostController } from '../controllers/postController';
-import authMiddleware from '../middlewares/authMiddleware';
+import { PostController } from '../../controllers/postController';
+import authMiddleware from '../../middlewares/authMiddleware';
 
 export async function postRoutes(fastify: FastifyInstance) {
     await authMiddleware(fastify);
