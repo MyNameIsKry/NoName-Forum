@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { PostService, PostRequestBody } from "../services/postService";
+import { CategoryType } from "../types/category/categoryTypes";
 
 export class PostController {
     constructor() {}
@@ -50,6 +51,21 @@ export class PostController {
                 res.status(400).send(result);
             else if (result.length === 0)
                 res.status(404).send({ message: "Không tìm thấy bài viết nào" });
+            else
+                res.status(200).send(result);
+        } catch(err) {
+            console.log(err);
+            res.status(500).send({error: err instanceof Error ? err.message : "An unknown error occured" });
+        }
+    }
+
+    public static async getPostByCategory(req: FastifyRequest<{ Params: { categoryName: CategoryType } }>, res: FastifyReply) {
+        try {
+            const { categoryName } = req.params;
+            const result = await PostService.getPostByCategory(categoryName);
+            
+            if ("error" in result)
+                res.status(400).send(result);
             else
                 res.status(200).send(result);
         } catch(err) {

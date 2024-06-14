@@ -7,4 +7,5 @@ export async function postRoutes(fastify: FastifyInstance) {
     fastify.get("/all", PostController.getAllPost);
     fastify.post("/new", PostController.createNewPost);
     fastify.get("/search", PostController.getPostByName);
+    fastify.get("/category/:categoryName", PostController.getPostByCategory);
 }

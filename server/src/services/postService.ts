@@ -1,7 +1,6 @@
 import { prisma } from "..";
 import { searchEngine } from "../utils/searchEngine";
-
-type CategoryType = "Buôn bán" | "Tâm sự chuyện đời" | "Húp sò";
+import { CategoryType } from "../types/category/categoryTypes";
 
 export interface PostRequestBody {
     authorId?: string;
@@ -32,7 +31,7 @@ export class PostService {
     constructor() {}
 
     public static async createPost(data: PostRequestBody) {
-        const allowedCategoryTypes: CategoryType[] = ["Buôn bán", "Tâm sự chuyện đời", "Húp sò"];
+        const allowedCategoryTypes: CategoryType[] = ["buon-ban", "tam-su", "hup-so"];
 
         try {
             const { authorId, authorName, title, content, categoryName } = data;
@@ -100,6 +99,38 @@ export class PostService {
             }
                 
         } catch(err) {
+            console.log(err);
+            return { error:  err instanceof Error ? err.message : "Unknow error occured" };
+        }
+    }
+
+    public static async getPostByCategory(categoryName: CategoryType) {
+        try {
+            const posts = await prisma.post.findMany({
+                where: {
+                    category_name: categoryName
+                },
+                select: {
+                    author_name: true,
+                    title: true,
+                    content: true,
+                    created_at: true,
+                    updated_at: true,
+                    comments: {
+                        select: {
+                            author_name: true,
+                            content: true,
+                            created_at: true,
+                            updated_at: true
+                        }
+                    }
+                }
+            })
+            if (posts.length === 0)
+                return { error: `Không tìm thấy post theo category: ${categoryName}` };
+
+            return posts;
+        } catch(err) {  
             console.log(err);
             return { error:  err instanceof Error ? err.message : "Unknow error occured" };
         }
