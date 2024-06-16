@@ -3,6 +3,7 @@ import { PrismaConnect } from './connectToDB'
 import { authRoutes } from './routes/public/authRoute'
 import { userRoutes } from './routes/public/userRoute'
 import { postRoutes } from './routes/public/postRoute'
+import { commentRoutes } from './routes/public/commentRoute'
 import privateRoute from './routes/privateRoute'
 import cookie from "@fastify/cookie"
 import type { FastifyCookieOptions } from '@fastify/cookie'
@@ -50,6 +51,7 @@ fastify.get('/', (request, reply) => {
 fastify.register(authRoutes, { prefix: "/auth" });
 fastify.register(userRoutes, { prefix: "/users" });
 fastify.register(postRoutes, { prefix: "/posts" });
+fastify.register(commentRoutes, { prefix: "/posts" });
 fastify.register(privateRoute);
 
 const start = async () => {
