@@ -40,6 +40,22 @@ export class PostController {
         }
     }
 
+    public static async getPostById(req: FastifyRequest<{ Params: { postId: string } }>, res: FastifyReply) {
+        try {
+            const { postId } = req.params;
+            const result = await PostService.getPostById(postId);
+            
+            if ('error' in result)
+                res.status(400).send(result);
+            else
+                res.status(200).send(result);
+            
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({error: err instanceof Error ? err.message : "An unknown error occured" });
+        }
+    }
+
     public static async getPostByName(req: FastifyRequest<{ Querystring: { postName: string } }>, res: FastifyReply) {
         try {
             const { postName } = req.query;

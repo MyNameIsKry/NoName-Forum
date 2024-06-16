@@ -65,12 +65,18 @@ export class PostService {
         try {
             const allPosts = await prisma.post.findMany({
                 select:{
+                    id: true,
                     title: true,
                     content: true,
                     author_name: true,
                     created_at: true,
                     updated_at: true,
                     category_name: true,
+                    author: {
+                        select: {
+                            avatar_url: true
+                        }
+                    },
                     comments: {
                         select: {
                             author_name: true,
@@ -83,6 +89,43 @@ export class PostService {
             });
             return allPosts;
         } catch(err) {
+            console.log(err); 
+            return { error: err instanceof Error ? err.message : "Unknow error occured" };
+        }
+    }
+
+    public static async getPostById(postId: string) {
+        try {
+            const post = await prisma.post.findUnique({
+                where: { id: postId },
+                select: {
+                    title: true,
+                    content: true,
+                    author_name: true,
+                    created_at: true,
+                    updated_at: true,
+                    category_name: true,
+                    author: {
+                        select: {
+                            avatar_url: true
+                        }
+                    },
+                    comments: {
+                        select: {
+                            author_name: true,
+                            content: true,
+                            created_at: true,
+                            updated_at: true
+                        }
+                    }
+                }
+            })
+
+            if (!post)
+                return { error: "Không tìm thấy id bài viết này" };
+            return post;
+            
+        } catch (err) {
             console.log(err); 
             return { error: err instanceof Error ? err.message : "Unknow error occured" };
         }
@@ -118,10 +161,7 @@ export class PostService {
                     updated_at: true,
                     comments: {
                         select: {
-                            author_name: true,
-                            content: true,
-                            created_at: true,
-                            updated_at: true
+                            _count: true
                         }
                     }
                 }
