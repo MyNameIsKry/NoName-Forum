@@ -2,6 +2,10 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { AuthService, LoginRequestBody, RegisterRequestBody } from '../services/authService';
 
 export class AuthController {
+    public static async googleLogin() {
+        
+    }
+
     public static async register(req: FastifyRequest<{ Body: RegisterRequestBody }>, res: FastifyReply) {
         try {
             const { email, password, username, repeatPassword } = req.body;

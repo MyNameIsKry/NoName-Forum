@@ -6,6 +6,6 @@ export async function userRoutes(fastify: FastifyInstance) {
     await authMiddleware(fastify);
     fastify.get("/search", UserController.getUserInfo);
     fastify.get("/me", UserController.getMyInfo);
-    fastify.put("/display_name", UserController.changeDisplayName);
-    fastify.put("/bio", UserController.changeBio);
+    fastify.put("/me/display_name", UserController.changeDisplayName);
+    fastify.put("/me/bio", UserController.changeBio);
 }

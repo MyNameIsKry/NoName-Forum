@@ -10,7 +10,9 @@ const configSchema = z.object({
     JWT_SECRET: z.string(),
     JWT_ACCESS_TOKEN_EXPIRES_IN: z.string(),
     JWT_REFRESH_TOKEN_EXPIRES_IN: z.string(),
-    COOKIE_SECRET: z.string()
+    COOKIE_SECRET: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string()
 })
 
 const configServer = configSchema.safeParse(process.env);

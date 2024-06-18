@@ -16,6 +16,7 @@ datasource db {
 
 model User {
   id String @id @default(cuid()) 
+  google_id String? @unique
   username String @unique
   display_name String
   email String @unique
@@ -28,6 +29,7 @@ model User {
   registered_at DateTime @default(now())
   posts Post[]
   comments Comment[]
+  reaction Reaction[]
   @@index([id])
 }
 
@@ -40,9 +42,10 @@ model Post {
   created_at DateTime @default(now()) 
   updated_at DateTime @updatedAt
   category_name String
-  author User @relation(fields: [author_id], references: [id])
+  author User @relation(fields: [author_id], references: [id], onDelete: Cascade)
   category Category @relation(fields: [category_name], references: [name])
   comments Comment[]
+  reaction Reaction[]
 }
 
 model Category {
@@ -56,11 +59,28 @@ model Category {
 model Comment {
   id String @id @default(cuid())
   post_id String
+  parent_id String?
   author_id String
   author_name String
   content String
+  parent Comment? @relation("CommentReplies", fields: [parent_id], references: [id])
+  replies Comment[] @relation("CommentReplies")
+  reaction Reaction[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  author User @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [post_id], references: [id])
+}
+
+model Reaction {
+  id String @id @default(cuid())
+  type String
+  author_id String
+  post_id String?
+  comment_id String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   author User @relation(fields: [author_id], references: [id])
-  post Post @relation(fields: [post_id], references: [id])
+  post Post? @relation(fields: [post_id], references: [id])
+  comment Comment? @relation(fields: [comment_id], references: [id])
 }

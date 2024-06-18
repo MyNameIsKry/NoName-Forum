@@ -21,6 +21,10 @@ export interface LoginRequestBody {
 export class AuthService {
     constructor() {}
 
+    public static async googleLogin() {
+        
+    }
+
     public static async register(data: RegisterRequestBody) {
         const { username, password, email, repeatPassword } = data;
 

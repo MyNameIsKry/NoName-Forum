@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
 export class PrismaConnect {
-    private static prisma = new PrismaClient();
+    private static prisma = new PrismaClient({
+        log: ["query"]
+    });
     constructor() {}
     
     public static getPrismaClient() {

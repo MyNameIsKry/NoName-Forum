@@ -115,7 +115,8 @@ export class PostService {
                             author_name: true,
                             content: true,
                             created_at: true,
-                            updated_at: true
+                            updated_at: true,
+                            replies: true
                         }
                     }
                 }
@@ -161,7 +162,10 @@ export class PostService {
                     updated_at: true,
                     comments: {
                         select: {
-                            _count: true
+                            author_name: true,
+                            content: true,
+                            created_at: true,
+                            updated_at: true,
                         }
                     }
                 }
