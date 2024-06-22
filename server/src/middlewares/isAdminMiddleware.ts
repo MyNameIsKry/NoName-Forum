@@ -1,11 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-
-interface User {
-  userId: string;
-  role: string;
-  username: string;
-  displayName: string;
-}
+import { User } from '@prisma/client';
 
 declare module 'fastify' {
   interface FastifyRequest {
