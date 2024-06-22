@@ -8,7 +8,7 @@ export class PostController {
     public static async createNewPost(req: FastifyRequest<{ Body: PostRequestBody }>, res: FastifyReply) {
         try {
             const { title, content, categoryName} = req.body;
-            const authorId = req.user?.userId;
+            const authorId = req.user?.id;
             const authorName = req.user?.username;
             
             if (!authorId || !authorName) return res.status(403).send({ error: "User is not authentiacted" });

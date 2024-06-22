@@ -20,7 +20,7 @@ export class UserController {
 
     public static async getMyInfo(req: FastifyRequest, res: FastifyReply) {
         try {
-            const userId = req.user?.userId;
+            const userId = req.user?.id;
             if (!userId)
                 return res.status(403).send({ error: "User is not authentiacted" })
             const userInfo = await UserService.getMyInfo(userId);
@@ -35,7 +35,7 @@ export class UserController {
 
     public static async changeDisplayName(req: FastifyRequest<{ Body: { displayName: string } }>, res: FastifyReply) {
         try {
-            const userId = req.user?.userId;
+            const userId = req.user?.id;
 
             if (!userId)
                 return res.status(403).send({ error: "User is not authentiacted" })
@@ -60,7 +60,7 @@ export class UserController {
 
     public static async changeBio(req: FastifyRequest<{ Body: { bio: string } }>, res: FastifyReply) {
         try {
-            const userId = req.user?.userId;
+            const userId = req.user?.id;
 
             if (!userId)
                 return res.status(403).send({ error: "User is not authentiacted" })

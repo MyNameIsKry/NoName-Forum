@@ -33,8 +33,8 @@ export class CommentController {
 
     public static async createComment(req: FastifyRequest<IPostCommand>, res: FastifyReply) {
         try {
-            const authorId = req.user?.userId;
-            const authorName = req.user?.displayName;
+            const authorId = req.user?.id;
+            const authorName = req.user?.display_name;
             const { postId } = req.params;
             const { content } = req.body;
 
