@@ -21,6 +21,7 @@ model User {
   display_name String
   email String @unique
   password String
+  isloginWithGoogle Boolean @default(false)
   role String @default("user")
   bio String?
   avatar_url String?
