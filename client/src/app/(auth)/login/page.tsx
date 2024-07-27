@@ -11,8 +11,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-color-body">
-      <div className="w-full max-w-md p-8 space-y-8 bg-[#2c353d] rounded-lg shadow-primary-boxShadow">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-primary-boxShadow mx-5">
         <h2 className="text-2xl font-bold text-center text-white">Đăng nhập</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -43,7 +43,7 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 text-white bg-[#FF6934] rounded hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff8052]"
+            className="w-full px-4 py-2 text-white bg-purple-600 rounded hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff8052]"
           >
             Đăng nhập
           </button>

@@ -1,31 +1,41 @@
 import fastifyPassport from "@fastify/passport";
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
 import envConfig from "../config";
+import { prisma } from "..";
+import { UserPayLoad } from "../types/userPayLoad";
+import { GenerateToken } from "../utils/generateToken";
 
 fastifyPassport.use("google", new GoogleStrategy({
     clientID: envConfig?.GOOGLE_CLIENT_ID as string,
     clientSecret: envConfig?.GOOGLE_CLIENT_SECRET as string,
     callbackURL: "/oauth2/google/callback",
-    passReqToCallback: true
+    passReqToCallback: true,
+    scope: ["profile", "email"],
   },
-  async (req, accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) => {
+  async (req, ggAccessToken: string, ggRefreshToken: string, profile: Profile, done: VerifyCallback) => {
     try {
-        // let user = await prisma.user.findUnique({
-        //     where: {
-        //         google_id: profile.id
-        //     }
-        // })
-
-        // if (!user) 
-        //   user = await prisma.user.create({
-        //     data: {
-        //       google_id: profile.id,
-        //       username: p
-        //     }
-        //   })
-        const a = done(null, profile);
-        console.log(a);
-        return a;
+        let user = await prisma.user.findUnique({
+            where: {
+                google_id: profile.id
+            }
+        })
+        
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              google_id: profile.id,
+              email: profile.emails?.[0].value || '',
+              username: profile.displayName,
+              password: "",
+              avatar_url: profile.photos ? profile.photos[0].value : null,
+              isloginWithGoogle: true,
+              display_name: profile.displayName,
+            }
+          })
+        }
+        const accessToken = new GenerateToken("access_token", envConfig?.JWT_ACCESS_TOKEN_EXPIRES_IN as string).generate(user);
+        console.log(accessToken);  
+        return done(null, user);
     } catch (err) {
       console.log(err);
         done(err);
@@ -33,10 +43,10 @@ fastifyPassport.use("google", new GoogleStrategy({
   }
 ));
 
-fastifyPassport.registerUserSerializer(async (user, request) => {
+fastifyPassport.registerUserSerializer(async (user: UserPayLoad, done) => {
   return user;
 });
 
-fastifyPassport.registerUserDeserializer(async (user, request) => {
+fastifyPassport.registerUserDeserializer(async (user: UserPayLoad, request) => {
   return user;
 });

@@ -21,6 +21,7 @@ export class UserController {
     public static async getMyInfo(req: FastifyRequest, res: FastifyReply) {
         try {
             const userId = req.user?.id;
+            
             if (!userId)
                 return res.status(403).send({ error: "User is not authentiacted" })
             const userInfo = await UserService.getMyInfo(userId);

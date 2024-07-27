@@ -14,20 +14,24 @@ export class AuthController {
 
     public static async login(req: FastifyRequest<{ Body: LoginRequestBody }>, res: FastifyReply) {
         try {
-            const { email, password } = req.body;
-            const result = await AuthService.login({ email, password });
-            if (!result) {
-                return res.status(401).send({ error: "Mật khẩu hoặc email không hợp lệ" });
-            }
-            
-            res.setCookie("refreshToken", result.refreshToken!, {
-                httpOnly: true,
-                sameSite: false,
-                secure: false,
-                path: "/"
-            });
-
-            res.status(200).send(result);
+            if (req.user) {
+                res.redirect("http://localhost:3000");
+            } else {
+                const { email, password } = req.body;
+                const result = await AuthService.login({ email, password });
+                if (!result) {
+                    return res.status(401).send({ error: "Mật khẩu hoặc email không hợp lệ" });
+                }
+                
+                res.setCookie("refreshToken", result.refreshToken!, {
+                    httpOnly: true,
+                    sameSite: false,
+                    secure: false,
+                    path: "/"
+                });
+    
+                res.status(200).send(result);
+            }   
         } catch (error) {
             res.status(400).send({ error: error });
         }

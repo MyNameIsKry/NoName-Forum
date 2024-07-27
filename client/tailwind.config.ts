@@ -10,11 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       boxShadow: {
-        "primary-boxShadow": "rgba(0, 0, 0, 0.5) 0px 5px 3px 0px"
-      },
-      backgroundColor: {
-        "color-body": "#1e252b",
-        "primary-color": "#262d34"
+        "primary-boxShadow": "rgba(0, 0, 0, 0.5) 0px 7px 3px 0px"
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

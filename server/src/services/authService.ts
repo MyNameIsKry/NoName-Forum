@@ -4,7 +4,8 @@ import envConfig from '../config';
 import { GenerateToken } from '../utils/generateToken';
 import jwt from "jsonwebtoken";
 import Joi from 'joi';
-//import { createTransport } from "nodemailer";
+import { UserPayLoad } from '../types/userPayLoad';
+import { createNodeCache } from '../utils/createCache';
 
 export interface RegisterRequestBody {
     email: string;
@@ -20,10 +21,6 @@ export interface LoginRequestBody {
 
 export class AuthService {
     constructor() {}
-
-    public static async googleLogin() {
-        
-    }
 
     public static async register(data: RegisterRequestBody) {
         const { username, password, email, repeatPassword } = data;
@@ -76,12 +73,22 @@ export class AuthService {
         try {
             const { email, password } = data;
 
+            if (!email || !password)
+                return { error: "Invalid password or email" };
+
             const user = await prisma.user.findUnique({ where: { email } });
-    
-            if (!user || !(await compare(password, user.password))) {
+            
+            const cache = createNodeCache(300);
+            const userPayLoadCache = cache.set("", 1);
+
+
+            if (!user || !(compare(password, user.password!))) {
                 return { error: "Email hoặc password sai!" };
             }
     
+            if (user.isloginWithGoogle)
+                return;
+
             const accessToken = new GenerateToken("access_token", envConfig?.JWT_ACCESS_TOKEN_EXPIRES_IN as string).generate(user);
             const refreshToken = new GenerateToken("refresh_token", envConfig?.JWT_REFRESH_TOKEN_EXPIRES_IN as string).generate(user);
 
@@ -99,8 +106,8 @@ export class AuthService {
 
     public static async refreshToken(token: string) {
         try {
-            const payload = jwt.verify(token, envConfig?.JWT_SECRET as string) as { userId: string, role: string, username: string, displayName: string }; 
-            const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+            const payload = jwt.verify(token, envConfig?.JWT_SECRET as string) as UserPayLoad;
+            const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
             if (!user)
                 return { error: "Invalid Token!" };
@@ -123,8 +130,8 @@ export class AuthService {
 
     public static async logout(refreshToken: string) {
         try {
-            const payload = jwt.verify(refreshToken, envConfig?.JWT_SECRET as string) as { userId: string, role: string, username: string, displayName: string }; 
-            const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+            const payload = jwt.verify(refreshToken, envConfig?.JWT_SECRET as string) as UserPayLoad;
+            const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
             await prisma.user.update({
                 where: { id: user?.id },

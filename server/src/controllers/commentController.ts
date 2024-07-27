@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { CommentService } from '../services/commentService';
+import { prisma } from '..';
 
 interface IPostCommandParams {
     postId: string;
@@ -34,7 +35,12 @@ export class CommentController {
     public static async createComment(req: FastifyRequest<IPostCommand>, res: FastifyReply) {
         try {
             const authorId = req.user?.id;
-            const authorName = req.user?.display_name;
+            
+            const userData = await prisma.user.findUnique({
+                where: { id: authorId }
+            });
+
+            const authorName = userData?.display_name;
             const { postId } = req.params;
             const { content } = req.body;
 

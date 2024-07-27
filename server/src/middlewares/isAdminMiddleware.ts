@@ -1,15 +1,19 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { User } from '@prisma/client';
-
-declare module 'fastify' {
-  interface FastifyRequest {
-    user?: User;
-  }
-}
+import { prisma } from '..';
+import NodeCache from "node-cache";
 
 async function isAdminMiddleware(fastify: FastifyInstance) {
-  fastify.addHook('preHandler', async (req: FastifyRequest, res: FastifyReply) => {
+  const myCache = new NodeCache({
+    stdTTL: 300
+  });
+  fastify.decorate('isAdminMiddleware', async (req: FastifyRequest, res: FastifyReply) => {
     try {
+      const userId = req.user?.id;
+      const userData = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        }
+      });
       const role = req.user?.role;
       if (role !== "admin") {
         res.status(403).send({ message: "Forbidden" });

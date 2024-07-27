@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { User } from "@prisma/client"
+import { UserPayLoad } from "../types/userPayLoad"
 import envConfig from "../config"
 
 type TokenType = "access_token" | "refresh_token"
@@ -10,13 +10,12 @@ export class GenerateToken {
         public expiresIn: string
     ) {}
 
-    public generate(user: User) {
+    public generate(user: UserPayLoad) {
         return jwt.sign(
             { 
-                userId: user.id, 
-                role: user.role,
+                id: user.id, 
                 username: user.username,
-                displayName: user.display_name
+                email: user.email
             },
             envConfig?.JWT_SECRET as string,
             { expiresIn: this.expiresIn }

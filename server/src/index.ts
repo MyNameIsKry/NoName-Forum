@@ -4,6 +4,7 @@ import { authRoutes } from './routes/public/authRoute'
 import { userRoutes } from './routes/public/userRoute'
 import { postRoutes } from './routes/public/postRoute'
 import { commentRoutes } from './routes/public/commentRoute'
+import { oauth2Route } from './routes/public/oauth2Route'
 import privateRoute from './routes/privateRoute'
 import cookie from "@fastify/cookie"
 import type { FastifyCookieOptions } from '@fastify/cookie'
@@ -13,6 +14,8 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastifyPassport from "@fastify/passport";
 import fastifySecureSession from '@fastify/secure-session';
 import "./lib/auth";
+import authMiddleware from './middlewares/authMiddleware'
+import isAdminMiddleware from './middlewares/isAdminMiddleware'
 
 const fastify = Fastify({
   logger: true
@@ -52,13 +55,12 @@ fastify.register(fastifySecureSession, {
     path: '/',
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 86400 // 24 hours in seconds
+    maxAge: 24 * 60 * 60 // 24 hours in seconds
   }
 });
 
-fastify.get('/', (request, reply) => {
-  reply.send("Hello world!")
-})
+authMiddleware(fastify);
+isAdminMiddleware(fastify);
 
 fastify.register(authRoutes, { prefix: "/auth" });
 fastify.register(userRoutes, { prefix: "/users" });
@@ -69,23 +71,7 @@ fastify.register(privateRoute);
 fastify.register(fastifyPassport.initialize());
 fastify.register(fastifyPassport.secureSession());
 
-fastify.get('/oauth2/google', {
-  preValidation: fastifyPassport.authenticate('google', { scope: ['profile', 'email'] }),
-  handler: (request, reply) => {
-    reply.send("lỏ lỏ lỏ lỏ cac cac cac cac")
-  }
-});
-
-fastify.get(
-  '/oauth2/google/callback',
-  {
-    preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }),
-    handler: (request, reply) => {
-      // Successful authentication
-      reply.send({ message: 'Logged in with Google' });
-    }
-  }
-);
+fastify.register(oauth2Route, { prefix: "/oauth2" });
 
 const start = async () => {
   fastify.listen({ port: 3300 }, (err, address) => {
