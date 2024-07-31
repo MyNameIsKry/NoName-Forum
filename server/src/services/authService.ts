@@ -5,7 +5,7 @@ import { GenerateToken } from '../utils/generateToken';
 import jwt from "jsonwebtoken";
 import Joi from 'joi';
 import { UserPayLoad } from '../types/userPayLoad';
-import { createNodeCache } from '../utils/createCache';
+//import { createNodeCache } from '../utils/createCache';
 
 export interface RegisterRequestBody {
     email: string;
@@ -78,8 +78,8 @@ export class AuthService {
 
             const user = await prisma.user.findUnique({ where: { email } });
             
-            const cache = createNodeCache(300);
-            const userPayLoadCache = cache.set("", 1);
+            // const cache = createNodeCache(300);
+            // const userPayLoadCache = cache.set("", 1);
 
 
             if (!user || !(compare(password, user.password!))) {

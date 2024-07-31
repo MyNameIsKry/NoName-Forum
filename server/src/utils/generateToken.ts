@@ -15,7 +15,8 @@ export class GenerateToken {
             { 
                 id: user.id, 
                 username: user.username,
-                email: user.email
+                email: user.email,
+                role: user.role
             },
             envConfig?.JWT_SECRET as string,
             { expiresIn: this.expiresIn }

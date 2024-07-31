@@ -1,6 +1,7 @@
 import { prisma } from "..";
 import { searchEngine } from "../utils/searchEngine";
 import { CategoryType } from "../types/category/categoryTypes";
+import { createNodeCache } from "../utils/createCache";
 
 export interface PostRequestBody {
     authorId?: string;
@@ -26,6 +27,8 @@ interface IComment {
     created_at: Date,
     updated_at: Date
 }
+
+const cache = createNodeCache(300);
 
 export class PostService {
     constructor() {}
@@ -54,6 +57,7 @@ export class PostService {
                 }
             });
 
+            cache.del("allPosts");
             return newPost;
         } catch(err) {
             console.log(err);
@@ -63,6 +67,12 @@ export class PostService {
 
     public static async getAllPost(): Promise<IPost[] | { error: string }> {
         try {
+            const cachePost = cache.get<IPost[]>("allPosts");
+
+            if (cachePost) {
+                return cachePost;
+            }
+            
             const allPosts = await prisma.post.findMany({
                 select:{
                     id: true,
@@ -87,6 +97,8 @@ export class PostService {
                     }
                 }
             });
+
+            cache.set("allPosts", allPosts);
             return allPosts;
         } catch(err) {
             console.log(err); 
@@ -95,6 +107,10 @@ export class PostService {
     }
 
     public static async getPostById(postId: string) {
+        const cachePost = cache.get(`post_id:${postId}`);
+
+        
+
         try {
             const post = await prisma.post.findUnique({
                 where: { id: postId },
