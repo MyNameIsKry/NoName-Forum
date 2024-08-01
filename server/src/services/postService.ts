@@ -69,9 +69,8 @@ export class PostService {
         try {
             const cachePost = cache.get<IPost[]>("allPosts");
 
-            if (cachePost) {
+            if (cachePost) 
                 return cachePost;
-            }
             
             const allPosts = await prisma.post.findMany({
                 select:{
@@ -106,10 +105,11 @@ export class PostService {
         }
     }
 
-    public static async getPostById(postId: string) {
-        const cachePost = cache.get(`post_id:${postId}`);
+    public static async getPostById(postId: string): Promise<IPost | { error: string }> {
+        const cachePostId = cache.get<IPost>(`post_id:${postId}`);
 
-        
+        if (cachePostId) 
+            return cachePostId;
 
         try {
             const post = await prisma.post.findUnique({
@@ -140,6 +140,8 @@ export class PostService {
 
             if (!post)
                 return { error: "Không tìm thấy id bài viết này" };
+
+            cache.set(`post_id:${postId}`, post);
             return post;
             
         } catch (err) {
@@ -164,7 +166,12 @@ export class PostService {
         }
     }
 
-    public static async getPostByCategory(categoryName: CategoryType) {
+    public static async getPostByCategory(categoryName: CategoryType): Promise<IPost[] | { error: string }> {
+        const cachePostCategory = cache.get<IPost[]>(`category_name:${categoryName}`);
+
+        if (cachePostCategory)
+            return cachePostCategory;
+
         try {
             const posts = await prisma.post.findMany({
                 where: {
@@ -176,6 +183,7 @@ export class PostService {
                     content: true,
                     created_at: true,
                     updated_at: true,
+                    category_name: true,
                     comments: {
                         select: {
                             author_name: true,
@@ -189,6 +197,7 @@ export class PostService {
             if (posts.length === 0)
                 return { error: `Không tìm thấy post theo category: ${categoryName}` };
 
+            cache.set(`category_name:${categoryName}`, posts);
             return posts;
         } catch(err) {  
             console.log(err);

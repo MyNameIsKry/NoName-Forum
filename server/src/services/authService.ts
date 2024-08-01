@@ -77,10 +77,6 @@ export class AuthService {
                 return { error: "Invalid password or email" };
 
             const user = await prisma.user.findUnique({ where: { email } });
-            
-            // const cache = createNodeCache(300);
-            // const userPayLoadCache = cache.set("", 1);
-
 
             if (!user || !(compare(password, user.password!))) {
                 return { error: "Email hoặc password sai!" };
