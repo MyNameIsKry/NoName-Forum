@@ -21,9 +21,17 @@ export interface IPost {
     category_name: string;
 };
 
-interface IComment {
+interface IRepliesComment {
+    content: string;
+    author_name: string;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface IComment {
     author_name: string,
     content: string,
+    replies?: IRepliesComment[]
     created_at: Date,
     updated_at: Date
 }
