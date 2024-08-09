@@ -3,7 +3,6 @@ import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-go
 import envConfig from "../config";
 import { prisma } from "..";
 import { UserPayLoad } from "../types/userPayLoad";
-import { GenerateToken } from "../utils/generateToken";
 
 fastifyPassport.use("google", new GoogleStrategy({
     clientID: envConfig?.GOOGLE_CLIENT_ID as string,
@@ -19,7 +18,6 @@ fastifyPassport.use("google", new GoogleStrategy({
                 google_id: profile.id
             }
         })
-        
         if (!user) {
           user = await prisma.user.create({
             data: {
@@ -33,8 +31,7 @@ fastifyPassport.use("google", new GoogleStrategy({
             }
           })
         }
-        const accessToken = new GenerateToken("access_token", envConfig?.JWT_ACCESS_TOKEN_EXPIRES_IN as string).generate(user);
-        console.log(accessToken);  
+      
         return done(null, user);
     } catch (err) {
       console.log(err);

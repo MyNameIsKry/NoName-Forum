@@ -24,11 +24,18 @@ export class AuthController {
                 }
                 
                 res.setCookie("refreshToken", result.refreshToken!, {
-                    httpOnly: true,
-                    sameSite: false,
+                    httpOnly: false,
+                    sameSite: "lax",
                     secure: false,
                     path: "/"
                 });
+
+                res.setCookie("accessToken", result.accessToken!, {
+                    httpOnly: false,
+                    sameSite: "lax",
+                    secure: false,
+                    path: "/"
+                })
     
                 res.status(200).send(result);
             }   
@@ -52,11 +59,18 @@ export class AuthController {
                 return res.status(403).send(result)
 
             res.setCookie("refreshToken", result.refreshToken!, {
-                httpOnly: true,
+                httpOnly: false,
                 sameSite: true,
                 secure: false,
                 path: "/"
             });
+
+            res.setCookie("accessToken", result.accessToken!, {
+                httpOnly: false,
+                sameSite: "lax",
+                secure: false,
+                path: "/"
+            })
 
             res.status(200).send(result);
         } catch (err) {
@@ -77,7 +91,7 @@ export class AuthController {
             AuthService.logout(refreshToken);
     
             res.clearCookie("refreshToken", {
-                httpOnly: true,
+                httpOnly: false,
                 sameSite: true,
                 secure: false,
                 path: "/"

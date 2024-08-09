@@ -13,12 +13,18 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastifyPassport from "@fastify/passport";
 import fastifySecureSession from '@fastify/secure-session';
+import fastifyCors from '@fastify/cors'
 import "./lib/auth";
 import authMiddleware from './middlewares/authMiddleware'
 import isAdminMiddleware from './middlewares/isAdminMiddleware'
 
 const fastify = Fastify({
   logger: true
+})
+
+fastify.register(fastifyCors, {
+  credentials: true,
+  origin: "*"
 })
 
 const swaggerOptions = {

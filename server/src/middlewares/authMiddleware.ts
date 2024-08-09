@@ -9,7 +9,8 @@ async function authMiddleware(fastify: FastifyInstance) {
   fastify.decorate('authMiddleware', async (req: FastifyRequest, res: FastifyReply) => {
 
     try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
+    console.log(">>> Token: ", token);
       if (!token) {
         return res.status(401).send({ error: 'Unauthorized' });
       }
