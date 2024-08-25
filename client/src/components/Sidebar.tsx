@@ -2,7 +2,7 @@ import React from 'react'
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export const Sidebar = () => {
+const Sidebar = () => {
   return (
     <aside className="bg-gray-800 p-4 w-72 text-white rounded-xl h-fit">
       <nav>
@@ -20,3 +20,5 @@ export const Sidebar = () => {
     </aside>
   )
 }
+
+export default Sidebar;

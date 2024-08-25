@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { faBell, faCaretDown, faMessage, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import Image from 'next/image';
+import default_avt from "../../public/avatar_default.jpg";
 
 interface IUserInfo {
   username: string;
@@ -16,7 +18,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ userData }) => {
-  const imgUrl = userData?.avatar_url;
+  const imgUrl = userData?.avatar_url || default_avt;
+  const displayName = userData?.display_name;
   
   return (
     <header className="bg-gray-800 text-white py-4 px-10 mb-5 rounded-lg">
@@ -51,10 +54,16 @@ const Header: React.FC<HeaderProps> = ({ userData }) => {
                 <FontAwesomeIcon icon={faBell} className='h-6 w-6' />  
               </div>
               <div className='flex items-center bg-input-color p-2 rounded-lg gap-3 cursor-pointer'>
-                <div className='w-10 h-10 border rounded-3xl'>
-                  <img className="rounded-3xl" src={`${userData.avatar_url}`} alt="user avatar" />
+                <div className='border-none rounded-3xl'>
+                  <Image
+                    src={imgUrl}
+                    alt="User's Image"
+                    width={54}
+                    height={54}
+                    className='rounded-3xl'
+                  />
                 </div>
-                <h1 className='font-bold text-xl'>{userData.display_name}</h1>
+                <h1 className='font-bold text-xl'>{displayName}</h1>
                 <FontAwesomeIcon icon={faCaretDown} className='h-5 w-5' />  
               </div>
             </div>

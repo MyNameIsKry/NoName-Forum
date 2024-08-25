@@ -1,11 +1,13 @@
 "use client"
-import Header from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
 import { Inter } from 'next/font/google'
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useEffect, useState } from 'react';
+import { lazy, Suspense } from "react";
+
+const Header = lazy(() => import("@/components/Header"));
+const Sidebar = lazy(() => import("@/components/Sidebar"));
 
 const inter = Inter({ subsets: ['latin'] });
 library.add(fas);
@@ -29,19 +31,18 @@ const Home: React.FC = () => {
         const token = cookie.split('accessToken=')[1];
 
         if (token) {
-          const response = await axios.get<IUserInfo>(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          console.log("Data: ", response.data);
-          setUserData(response.data);
-        } else console.log("No data")
+            const response = await axios.get<IUserInfo>(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            });
+            setUserData(response.data);
+        }
       } catch (err) {
         console.error("Error get userData: ", err);
       }
     };
-
+    
     fetchUserData();
   }, []);
 
