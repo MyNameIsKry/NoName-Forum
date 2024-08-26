@@ -1,13 +1,13 @@
-"use client"
-import { Inter } from 'next/font/google'
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { useEffect, useState } from 'react';
-import { lazy, Suspense } from "react";
+// src/app/page.tsx
+import { Inter } from 'next/font/google';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { Suspense, lazy } from 'react';
+import { cookies } from 'next/headers';
 
-const Header = lazy(() => import("@/components/Header"));
-const Sidebar = lazy(() => import("@/components/Sidebar"));
+const Header = lazy(() => import('@/components/Header'));
+const Sidebar = lazy(() => import('@/components/Sidebar'));
 
 const inter = Inter({ subsets: ['latin'] });
 library.add(fas);
@@ -21,40 +21,49 @@ interface IUserInfo {
   registered_at: Date;
 }
 
-const Home: React.FC = () => {
-  const [userData, setUserData] = useState<IUserInfo | null>(null);
+const fetchUserData = async (): Promise<IUserInfo | null> => {
+  const token = getTokenFromCookies();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const cookie = document.cookie;
-        const token = cookie.split('accessToken=')[1];
+  if (!token) {
+    return null;
+  }
 
-        if (token) {
-            const response = await axios.get<IUserInfo>(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            });
-            setUserData(response.data);
-        }
-      } catch (err) {
-        console.error("Error get userData: ", err);
-      }
-    };
-    
-    fetchUserData();
-  }, []);
+  try {
+    const response = await axios.get<IUserInfo>(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Homeeeeeeee")
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
+  }
+};
+
+const getTokenFromCookies = (): string | null => {
+  const cookieStore = cookies();
+  const token = cookieStore.get("accessToken");
+
+  return token ? token.value : null;
+};
+
+const Home = async () => {
+  const userData = await fetchUserData(); 
 
   return (
     <main className={`bg-gray-900 bg w-dvw h-dvh ${inter.className} flex-1 p-4`}>
-      <Header userData={userData}/>
+      <Suspense fallback={<div>Loading Header...</div>}>
+        <Header userData={userData} />
+      </Suspense>
       <div className="flex flex-1">
-        <Sidebar/>
-
+        <Suspense fallback={<div>Loading Sidebar...</div>}>
+          <Sidebar />
+        </Suspense>
       </div>
     </main>
   );
-}
+};
 
-export default Home
+export default Home;
