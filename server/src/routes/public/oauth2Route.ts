@@ -29,15 +29,15 @@ export async function oauth2Route(fastify: FastifyInstance) {
 
               reply.setCookie("refreshToken", refreshToken, {
                 httpOnly: false,
-                sameSite: true,
-                secure: false,
+                sameSite: "lax",
+                secure: process.env.NODE_ENV === "production",
                 path: "/"
               });
 
               reply.setCookie("accessToken", accessToken, {
                 httpOnly: false,
-                sameSite: true,
-                secure: false,
+                sameSite: "lax",
+                secure: process.env.NODE_ENV === "production",
                 path: "/"
               });
 
