@@ -10,12 +10,12 @@ async function authMiddleware(fastify: FastifyInstance) {
 
     try {
     const token = req.headers.authorization?.split(' ')[1] || req.cookies.accessToken;
-    console.log(">>> Token: ", token);
+
       if (!token) {
         return res.status(401).send({ error: 'Unauthorized' });
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+      const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as JwtPayload;
 
       if (!decoded || typeof decoded !== 'object') {
         return res.status(403).send({ error: "Invalid Token" })
