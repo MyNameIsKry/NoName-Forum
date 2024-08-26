@@ -7,7 +7,8 @@ config({
 
 const configSchema = z.object({
     DATABASE_URL: z.string(),
-    JWT_SECRET: z.string(),
+    JWT_ACCESS_SECRET: z.string(),
+    JWT_REFRESH_SECRET: z.string(),
     JWT_ACCESS_TOKEN_EXPIRES_IN: z.string(),
     JWT_REFRESH_TOKEN_EXPIRES_IN: z.string(),
     COOKIE_SECRET: z.string(),

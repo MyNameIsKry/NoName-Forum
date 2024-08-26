@@ -11,6 +11,8 @@ export class GenerateToken {
     ) {}
 
     public generate(user: UserPayLoad) {
+        const jwtSecret = this.type === "access_token" ? envConfig?.JWT_ACCESS_SECRET : envConfig?.JWT_REFRESH_SECRET;
+
         return jwt.sign(
             { 
                 id: user.id, 
@@ -18,7 +20,7 @@ export class GenerateToken {
                 email: user.email,
                 role: user.role
             },
-            envConfig?.JWT_SECRET as string,
+            jwtSecret as string,
             { expiresIn: this.expiresIn }
         )
     }

@@ -24,7 +24,7 @@ const fastify = Fastify({
 
 fastify.register(fastifyCors, {
   credentials: true,
-  origin: "*"
+  origin: true
 })
 
 const swaggerOptions = {
