@@ -74,16 +74,19 @@ export class AuthService {
             const { email, password } = data;
 
             if (!email || !password)
-                return { error: "Invalid password or email" };
+                return { status: 400, error: "Invalid password or email" };
 
             const user = await prisma.user.findUnique({ where: { email } });
 
             if (!user || !(compare(password, user.password!))) {
-                return { error: "Email hoặc password sai!" };
+                return { status: 401, error: "Email hoặc password sai!" };
             }
     
             if (user.isloginWithGoogle)
-                return;
+                return { 
+                    status: 403,
+                    error: "Người dùng này đã đăng nhập bằng google. Hãy dùng google để đăng nhập"        
+            }
 
             const accessToken = new GenerateToken("access_token", envConfig?.JWT_ACCESS_TOKEN_EXPIRES_IN as string).generate(user);
             const refreshToken = new GenerateToken("refresh_token", envConfig?.JWT_REFRESH_TOKEN_EXPIRES_IN as string).generate(user);
@@ -93,16 +96,16 @@ export class AuthService {
                 data: { refresh_token: refreshToken }
             })
 
-            return { user, accessToken, refreshToken };   
+            return { status: 201, user, accessToken, refreshToken };   
         } catch (err) {
             console.log(err);
-            return;
+            return { status: 500, error: err };
         }
     }
 
     public static async refreshToken(token: string) {
         try {
-            const payload = jwt.verify(token, envConfig?.JWT_SECRET as string) as UserPayLoad;
+            const payload = jwt.verify(token, envConfig?.JWT_REFRESH_SECRET as string) as UserPayLoad;
             const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
             if (!user)
@@ -126,7 +129,7 @@ export class AuthService {
 
     public static async logout(refreshToken: string) {
         try {
-            const payload = jwt.verify(refreshToken, envConfig?.JWT_SECRET as string) as UserPayLoad;
+            const payload = jwt.verify(refreshToken, envConfig?.JWT_REFRESH_SECRET as string) as UserPayLoad;
             const user = await prisma.user.findUnique({ where: { id: payload.id } });
 
             await prisma.user.update({

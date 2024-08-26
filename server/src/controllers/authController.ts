@@ -14,31 +14,27 @@ export class AuthController {
 
     public static async login(req: FastifyRequest<{ Body: LoginRequestBody }>, res: FastifyReply) {
         try {
-            if (req.user) {
-                res.redirect("http://localhost:3000");
-            } else {
                 const { email, password } = req.body;
                 const result = await AuthService.login({ email, password });
-                if (!result) {
-                    return res.status(401).send({ error: "Mật khẩu hoặc email không hợp lệ" });
+                if (result.status >= 400 ) {
+                    return res.status(result.status).send({ status: result.status, error: result.error });
                 }
                 
                 res.setCookie("refreshToken", result.refreshToken!, {
                     httpOnly: false,
                     sameSite: "lax",
-                    secure: false,
+                    secure: process.env.NODE_ENV === "production",
                     path: "/"
                 });
 
                 res.setCookie("accessToken", result.accessToken!, {
                     httpOnly: false,
                     sameSite: "lax",
-                    secure: false,
+                    secure: process.env.NODE_ENV === "production",
                     path: "/"
                 })
     
-                res.status(200).send(result);
-            }   
+                res.status(201).send(result); 
         } catch (error) {
             res.status(400).send({ error: error });
         }
@@ -67,7 +63,7 @@ export class AuthController {
 
             res.setCookie("accessToken", result.accessToken!, {
                 httpOnly: false,
-                sameSite: "lax",
+                sameSite: true,
                 secure: false,
                 path: "/"
             })
