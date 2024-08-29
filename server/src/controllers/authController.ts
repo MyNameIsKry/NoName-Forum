@@ -6,6 +6,11 @@ export class AuthController {
         try {
             const { email, password, username, repeatPassword } = req.body;
             const result = await AuthService.register({ email, password, username, repeatPassword });
+
+            if (result.status >= 400) {
+                return res.status(result.status).send(result.error);
+            }
+
             res.status(201).send(result);
         } catch (error) {
             res.status(400).send({ error: error });
