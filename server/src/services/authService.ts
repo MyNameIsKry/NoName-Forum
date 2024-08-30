@@ -38,19 +38,19 @@ export class AuthService {
         });
 
         if (error)
-            return { error: error };
+            return { status: 400, error: error };
 
         const existingUserEmail = await prisma.user.findUnique({ where: { email } });
         const existingUsername = await prisma.user.findUnique({ where: { username } });
 
         if (existingUserEmail)
-            return { error: "Email đã tồn tại" };
+            return { status: 409, error: "Email đã tồn tại" };
 
         if (existingUsername)
-            return { error: "Username đã tồn tại" };
+            return { status: 409, error: "Username đã tồn tại" };
 
         if (password !== repeatPassword)
-            return { error: "Mật khẩu không khớp với nhau" };
+            return { status: 400, error: "Mật khẩu không khớp với nhau" };
 
         const salt = await genSalt(10);
         const hashedPassword = await hash(password, salt);
@@ -66,7 +66,7 @@ export class AuthService {
             }
         });
         
-        return { user }
+        return { status: 201, user }
     }
 
     public static async login(data: LoginRequestBody) {
