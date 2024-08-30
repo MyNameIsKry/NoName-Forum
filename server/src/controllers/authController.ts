@@ -8,7 +8,7 @@ export class AuthController {
             const result = await AuthService.register({ email, password, username, repeatPassword });
 
             if (result.status >= 400) {
-                return res.status(result.status).send(result.error);
+                return res.status(result.status).send(result);
             }
 
             res.status(201).send(result);
