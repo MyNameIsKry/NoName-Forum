@@ -1,4 +1,3 @@
-// src/app/page.tsx
 import { Inter } from 'next/font/google';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -34,7 +33,7 @@ const fetchUserData = async (): Promise<IUserInfo | null> => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Homeeeeeeee")
+    
     return response.data;
   } catch (error) {
     console.error('Error fetching user data:', error);
