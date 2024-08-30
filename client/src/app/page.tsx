@@ -34,7 +34,7 @@ const fetchUserData = async (): Promise<IUserInfo | null> => {
         Authorization: `Bearer ${token}`,
       },
     });
-    
+    console.log("Homeeeeeeee")
     return response.data;
   } catch (error) {
     console.error('Error fetching user data:', error);

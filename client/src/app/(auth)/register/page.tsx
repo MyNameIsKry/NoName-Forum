@@ -9,20 +9,16 @@ import { purple } from "@mui/material/colors";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-interface IRegister {
+interface ILogin {
   email: string;
-  username: string;
-  password: string;
-  repeatPassword: string;  
+  password: string;  
 }
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState<IRegister>(
+  const [formData, setFormData] = useState<ILogin>(
     {
       email: "",
-      username: "",
-      password: "",
-      repeatPassword: ""
+      password: ""
     }
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -41,7 +37,7 @@ const RegisterPage = () => {
         return;
       }
       else {
-        router.push("/login");
+        router.push("/");
       }
     } catch(err) {
       setErrorMessage("Internal server error")
@@ -65,7 +61,7 @@ const RegisterPage = () => {
           className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-primary-boxShadow mx-5"
           onSubmit={handleSubmit}
         > 
-            <h2 className="text-2xl font-bold text-center text-white">Đăng ký</h2>
+            <h2 className="text-2xl font-bold text-center text-white">Đăng nhập</h2>
             <p className="text-center text-red-600">{errorMessage}</p>
             <TextField
               label="Email"
@@ -84,49 +80,7 @@ const RegisterPage = () => {
               }}
               InputLabelProps={{
                 style: {
-                  color: 'grey',
-                },
-              }}
-              sx={{
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white', 
-                  '&:hover': {
-                    backgroundColor: 'white', 
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white', 
-                  },
-                  '&:before': {
-                    borderBottomColor: 'gray', 
-                    borderBottomWidth: '2px'
-                  },
-                  '&:after': {
-                    borderBottomColor: purple[600], 
-                    borderBottomWidth: '4px'
-                  },
-                },
-                '& .MuiInputLabel-root': {
-                  color: 'black', 
-                },
-              }}
-            />
-            <TextField
-              label="Username"
-              variant="filled"
-              fullWidth
-              required
-              margin="normal"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData,  username: e.target.value})}
-              InputProps={{
-                style: {
-                  color: 'black', 
-                  backgroundColor: 'white',
-                },
-              }}
-              InputLabelProps={{
-                style: {
-                  color: 'grey',
+                  color: 'black',
                 },
               }}
               sx={{
@@ -164,55 +118,12 @@ const RegisterPage = () => {
               InputProps={{
                 style: {
                   color: 'black', 
-                  backgroundColor: 'white',
-                },
-              }}
-              InputLabelProps={{
-                style: {
-                  color: 'grey',
-                },
-              }}
-              sx={{
-                '& .MuiFilledInput-root': {
-                  backgroundColor: 'white', 
-                  '&:hover': {
-                    backgroundColor: 'white', 
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white', 
-                  },
-                  '&:before': {
-                    borderBottomColor: 'gray', 
-                    borderBottomWidth: '2px'
-                  },
-                  '&:after': {
-                    borderBottomColor: purple[600], 
-                    borderBottomWidth: '4px'
-                  },
-                },
-                '& .MuiInputLabel-root': {
-                  color: 'black', 
-                },
-              }}
-            />
-            <TextField
-              label="Nhập lại mật khẩu"
-              type="password"
-              variant="filled"
-              fullWidth
-              required
-              margin="normal"
-              value={formData.repeatPassword}
-              onChange={(e) => setFormData({ ...formData,  repeatPassword: e.target.value})}
-              InputProps={{
-                style: {
-                  color: 'black', 
                   backgroundColor: 'white', 
                 },
               }}
               InputLabelProps={{
                 style: {
-                  color: 'grey', 
+                  color: 'black', 
                 },
               }}
               sx={{
@@ -238,9 +149,12 @@ const RegisterPage = () => {
                 },
               }}
             />
-            <SignInButton type="submit" >Đăng ký</SignInButton>
+            <SignInButton type="submit" >Đăng nhập</SignInButton>
+            <p className="text-white">
+            Quên mật khẩu ?
+          </p>
           <p className="text-white">
-            Bạn đã có tài khoản ? <Link href="/login" className="text-white underline">Đăng nhập</Link>
+            Người mới ? <Link href="/register" className="text-white underline">Tạo tài khoản</Link>
           </p>
           <div className="flex items-center w-full">
             <hr className="h-px bg-neutral-500 border-none m-0 w-1/2"/>
