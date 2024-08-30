@@ -1,4 +1,3 @@
-// src/app/page.tsx
 import { Inter } from 'next/font/google';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';

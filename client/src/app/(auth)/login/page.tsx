@@ -80,7 +80,7 @@ const LoginPage = () => {
               }}
               InputLabelProps={{
                 style: {
-                  color: 'grey',
+                  color: 'black',
                 },
               }}
               sx={{
@@ -123,7 +123,7 @@ const LoginPage = () => {
               }}
               InputLabelProps={{
                 style: {
-                  color: 'grey', 
+                  color: 'black', 
                 },
               }}
               sx={{
