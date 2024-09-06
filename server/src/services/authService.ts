@@ -5,7 +5,8 @@ import { GenerateToken } from '../utils/generateToken';
 import jwt from "jsonwebtoken";
 import Joi from 'joi';
 import { UserPayLoad } from '../types/userPayLoad';
-//import { createNodeCache } from '../utils/createCache';
+import { sendVerificationCode } from '../utils/verifyEmail';
+import { createNodeCache } from '../utils/createCache';
 
 export interface RegisterRequestBody {
     email: string;
@@ -16,6 +17,13 @@ export interface RegisterRequestBody {
 
 export interface LoginRequestBody {
     email: string;
+    password: string;
+}
+
+export interface VerifyBody {
+    email: string;
+    code: string;
+    username: string;
     password: string;
 }
 
@@ -52,21 +60,44 @@ export class AuthService {
         if (password !== repeatPassword)
             return { status: 400, error: "Mật khẩu không khớp với nhau" };
 
-        const salt = await genSalt(10);
-        const hashedPassword = await hash(password, salt);
-        
-        const user = await prisma.user.create({
-            data: {
-                username: username,
-                display_name: username,
-                password: hashedPassword,
-                email: email,
-                registered_at: new Date(),
-                updated_at: new Date(),
-            }
+        const cache = createNodeCache(60);
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+        cache.set("verification_code", {
+            email: email,
+            code: verificationCode
         });
+
+        await sendVerificationCode(email, verificationCode);
+
+        return { status: 200, message: "Đã gửi mã xác thực thành công" };
+    }
+
+    public static async verify(data: VerifyBody) {
+        const { email, code, username, password } = data;
+        const cache = createNodeCache(60);
         
-        return { status: 201, user }
+        const verificationCode = cache.get<VerifyBody>("verification_code");
+        
+        if (verificationCode && verificationCode.email == email && verificationCode.code == code ) {
+            console.log(verificationCode);  
+            const salt = await genSalt(10);
+            const hashedPassword = await hash(password, salt);
+            
+            const user = await prisma.user.create({
+                data: {
+                    username: username,
+                    display_name: username,
+                    password: hashedPassword,
+                    email: email,
+                    registered_at: new Date(),
+                    updated_at: new Date(),
+                }
+            });
+            return { status: 201, user }
+        }
+
+        return { status: 400, error: "Đã hết thời gian hoặc mã xác thực không hợp lệ" };
     }
 
     public static async login(data: LoginRequestBody) {

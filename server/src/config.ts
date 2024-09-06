@@ -14,7 +14,9 @@ const configSchema = z.object({
     COOKIE_SECRET: z.string(),
     SESSION_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
-    GOOGLE_CLIENT_SECRET: z.string()
+    GOOGLE_CLIENT_SECRET: z.string(),
+    GMAIL_USER: z.string(),
+    PASS_GMAIL_USER: z.string()
 })
 
 const configServer = configSchema.safeParse(process.env);
