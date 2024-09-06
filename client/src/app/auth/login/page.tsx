@@ -154,7 +154,7 @@ const LoginPage = () => {
             Quên mật khẩu ?
           </p>
           <p className="text-white">
-            Người mới ? <Link href="/register" className="text-white underline">Tạo tài khoản</Link>
+            Người mới ? <Link href="/auth/register" className="text-white underline">Tạo tài khoản</Link>
           </p>
           <div className="flex items-center w-full">
             <hr className="h-px bg-neutral-500 border-none m-0 w-1/2"/>
