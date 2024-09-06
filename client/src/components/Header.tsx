@@ -59,10 +59,10 @@ const Header: React.FC<HeaderProps> = ({ userData }) => {
           </div>
           {!userData ? (
             <div className='flex items-center gap-9 font-bold'>
-              <Link href="/login">
+              <Link href="/auth/login">
                 Đăng nhập
               </Link>
-              <RegisterButton href='/register'>
+              <RegisterButton href='/auth/register'>
                 Đăng ký
               </RegisterButton>
             </div>

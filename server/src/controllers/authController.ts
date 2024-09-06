@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { AuthService, LoginRequestBody, RegisterRequestBody } from '../services/authService';
+import { AuthService, LoginRequestBody, RegisterRequestBody, VerifyBody } from '../services/authService';
 
 export class AuthController {
     public static async register(req: FastifyRequest<{ Body: RegisterRequestBody }>, res: FastifyReply) {
@@ -8,12 +8,27 @@ export class AuthController {
             const result = await AuthService.register({ email, password, username, repeatPassword });
 
             if (result.status >= 400) {
-                return res.status(result.status).send(result);
+                return res.status(result.status).send(result.error);
+            }
+
+            res.status(201).send(result.message);
+        } catch (error) {
+            res.status(400).send({ error: error });
+        }
+    }
+
+    public static async verify(req: FastifyRequest<{ Body: VerifyBody }>, res: FastifyReply) {
+        try {
+            const { email, code, username, password } = req.body;
+            const result = await AuthService.verify({ email, code, username, password });
+
+            if (result.status >= 400) {
+                return res.status(result.status).send(result.error);
             }
 
             res.status(201).send(result);
-        } catch (error) {
-            res.status(400).send({ error: error });
+        } catch(err) {
+            res.status(500).send({ error: err });
         }
     }
 
