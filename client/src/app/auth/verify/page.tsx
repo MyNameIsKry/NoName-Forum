@@ -5,15 +5,21 @@ import { styled } from "@mui/material";
 import { purple } from "@mui/material/colors";
 import Link from 'next/link';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
+const sessionStorageKey: string = `user_register_data`;
 
 const VerifyPage: React.FC = () => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(''));
   const [count, setCount] = useState<number>(60);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (count <= 0) return; 
-
+    
     const intervalId = setInterval(() => {
       setCount((prevCount: number) => prevCount - 1);
     }, 1000);
@@ -46,19 +52,31 @@ const VerifyPage: React.FC = () => {
   };
 
   const handleOTP = async () => {
-    let optStr = '';
+    let otpStr = '';
     otp.forEach(i => {
-      optStr += i;
+      otpStr += i;
     })  
-
     try {
-      const data = window.sessionStorage.getItem("user_register_data");
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, otp);
+      const data = window.sessionStorage.getItem(sessionStorageKey);
 
-      console.log(data);
-      console.log(res);
+      if(data) {
+        const dataObj = JSON.parse(data);
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, { ...dataObj, code: otpStr }, {
+          withCredentials: true,
+          validateStatus: (status) => true
+        });
+        console.log(res.data);
+        window.sessionStorage.removeItem(sessionStorageKey);
+
+        if (res.data.status >= 400) {
+          setErrorMessage(res.data.error);
+          return;
+        }
+        
+        router.push("/auth/login");
+      }
     } catch(err) {
-      console.error(err);
+      console.error(err); 
     }
   }
 
@@ -78,6 +96,7 @@ const VerifyPage: React.FC = () => {
             component={'form'}
             className="w-full max-w-md p-6 sm:p-8 space-y-6 sm:space-y-8 bg-gray-800 rounded-lg shadow-primary-boxShadow"
         >
+        { errorMessage && <p className='text-red-500 w-full text-center text-xl sm:text-xl'>{errorMessage}</p> }
         <h1 className='text-white w-full text-center text-xl sm:text-2xl'>
           Nhập mã xác nhận vào bên dưới
         </h1>

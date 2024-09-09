@@ -41,6 +41,7 @@ const LoginPage = () => {
       }
     } catch(err) {
       setErrorMessage("Internal server error")
+      console.log(err);
     }
   };
 

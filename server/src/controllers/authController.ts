@@ -8,12 +8,12 @@ export class AuthController {
             const result = await AuthService.register({ email, password, username, repeatPassword });
 
             if (result.status >= 400) {
-                return res.status(result.status).send(result.error);
+                return res.status(result.status).send({ status: result.status, error: result.error });
             }
 
             res.status(201).send(result.message);
         } catch (error) {
-            res.status(400).send({ error: error });
+            res.status(500).send({ error: error });
         }
     }
 
@@ -23,7 +23,7 @@ export class AuthController {
             const result = await AuthService.verify({ email, code, username, password });
 
             if (result.status >= 400) {
-                return res.status(result.status).send(result.error);
+                return res.status(result.status).send({ status: result.status, error: result.error });
             }
 
             res.status(201).send(result);
