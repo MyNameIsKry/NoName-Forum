@@ -34,7 +34,8 @@ const RegisterPage = () => {
         return;
       }
       else {
-        window.sessionStorage.setItem("user_register_data", JSON.stringify(formData));
+        const { repeatPassword, ...registerData } = formData; 
+        window.sessionStorage.setItem("user_register_data", JSON.stringify(registerData));
         router.push("/auth/verify");
       }
     } catch(err) {
