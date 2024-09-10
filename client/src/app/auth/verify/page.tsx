@@ -6,6 +6,7 @@ import { purple } from "@mui/material/colors";
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Notification from '@/components/Notification';
 
 const sessionStorageKey: string = `user_register_data`;
 
@@ -51,6 +52,10 @@ const VerifyPage: React.FC = () => {
     }
   };
 
+  const handleCloseNoti = () => {
+    setErrorMessage(null);
+  }
+
   const handleOTP = async () => {
     let otpStr = '';
     otp.forEach(i => {
@@ -65,18 +70,16 @@ const VerifyPage: React.FC = () => {
           withCredentials: true,
           validateStatus: (status) => true
         });
-        console.log(res.data);
-        window.sessionStorage.removeItem(sessionStorageKey);
-
+        
         if (res.data.status >= 400) {
           setErrorMessage(res.data.error);
           return;
         }
+        window.sessionStorage.removeItem(sessionStorageKey);
         
         router.push("/auth/login");
       }
     } catch(err) {
-      console.error(err); 
     }
   }
 
@@ -96,7 +99,15 @@ const VerifyPage: React.FC = () => {
             component={'form'}
             className="w-full max-w-md p-6 sm:p-8 space-y-6 sm:space-y-8 bg-gray-800 rounded-lg shadow-primary-boxShadow"
         >
-        { errorMessage && <p className='text-red-500 w-full text-center text-xl sm:text-xl'>{errorMessage}</p> }
+        { 
+          errorMessage && 
+            <Notification
+              message={errorMessage} 
+              open={errorMessage ? true : false}
+              onClose={handleCloseNoti}
+              severity="error"
+            />
+        }
         <h1 className='text-white w-full text-center text-xl sm:text-2xl'>
           Nhập mã xác nhận vào bên dưới
         </h1>
