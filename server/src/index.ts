@@ -19,7 +19,7 @@ import authMiddleware from './middlewares/authMiddleware'
 import isAdminMiddleware from './middlewares/isAdminMiddleware'
 
 const fastify = Fastify({
-  logger: true
+  logger: false
 })
 
 fastify.register(fastifyCors, {

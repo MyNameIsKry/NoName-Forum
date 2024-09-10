@@ -5,7 +5,8 @@ import { GenerateToken } from '../utils/generateToken';
 import jwt from "jsonwebtoken";
 import Joi from 'joi';
 import { UserPayLoad } from '../types/userPayLoad';
-//import { createNodeCache } from '../utils/createCache';
+import { sendVerificationCode } from '../utils/sendMail';
+import { createNodeCache } from '../utils/createCache';
 
 export interface RegisterRequestBody {
     email: string;
@@ -19,6 +20,15 @@ export interface LoginRequestBody {
     password: string;
 }
 
+export interface VerifyBody {
+    email: string;
+    code: string;
+    username: string;
+    password: string;
+}
+
+const cache = createNodeCache(60);
+
 export class AuthService {
     constructor() {}
 
@@ -31,14 +41,11 @@ export class AuthService {
             repeatPassword: Joi.ref('password')
         });
 
-        const { error } = schema.validate({
+        const { value } = schema.validate({
             username: username,
             password: password,
             repeatPassword: repeatPassword
         });
-
-        if (error)
-            return { status: 400, error: error };
 
         const existingUserEmail = await prisma.user.findUnique({ where: { email } });
         const existingUsername = await prisma.user.findUnique({ where: { username } });
@@ -49,36 +56,57 @@ export class AuthService {
         if (existingUsername)
             return { status: 409, error: "Username đã tồn tại" };
 
-        if (password !== repeatPassword)
+        if (value.password !== value.repeatPassword)
             return { status: 400, error: "Mật khẩu không khớp với nhau" };
 
-        const salt = await genSalt(10);
-        const hashedPassword = await hash(password, salt);
-        
-        const user = await prisma.user.create({
-            data: {
-                username: username,
-                display_name: username,
-                password: hashedPassword,
-                email: email,
-                registered_at: new Date(),
-                updated_at: new Date(),
-            }
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+        cache.set<VerifyBody>("verification_code", {
+            email: email,
+            code: verificationCode,
+            username: username,
+            password: password
         });
+
+        await sendVerificationCode(email, verificationCode, username);
+
+        return { status: 200, message: "Đã gửi mã xác thực thành công" };
+    }
+
+    public static async verify(data: VerifyBody) {
+        const { email, code, username, password } = data;
+        const verificationCode = cache.get<VerifyBody>("verification_code");
         
-        return { status: 201, user }
+        if (verificationCode && verificationCode.email == email && verificationCode.code == code ) {
+            const salt = await genSalt(10);
+            const hashedPassword = await hash(password, salt);
+            
+            const user = await prisma.user.create({
+                data: {
+                    username: username,
+                    display_name: username,
+                    password: hashedPassword,
+                    email: email,
+                    registered_at: new Date(),
+                    updated_at: new Date(),
+                }
+            });
+            return { status: 201, user }
+        }
+
+        return { status: 400, error: "Đã hết thời gian hoặc mã xác thực không hợp lệ" };
     }
 
     public static async login(data: LoginRequestBody) {
         try {
             const { email, password } = data;
-
+            
             if (!email || !password)
                 return { status: 400, error: "Invalid password or email" };
 
             const user = await prisma.user.findUnique({ where: { email } });
 
-            if (!user || !(compare(password, user.password!))) {
+            if (!user || !(await compare(password, user.password!))) {
                 return { status: 401, error: "Email hoặc password sai!" };
             }
     

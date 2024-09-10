@@ -9,13 +9,6 @@ import { purple } from "@mui/material/colors";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
-interface IRegister {
-  email: string;
-  username: string;
-  password: string;
-  repeatPassword: string;  
-}
-
 const RegisterPage = () => {
   const [formData, setFormData] = useState<IRegister>(
     {
@@ -41,14 +34,16 @@ const RegisterPage = () => {
         return;
       }
       else {
-        router.push("/login");
+        const { repeatPassword, ...registerData } = formData; 
+        window.sessionStorage.setItem("user_register_data", JSON.stringify(registerData));
+        router.push("/auth/verify");
       }
     } catch(err) {
       setErrorMessage("Internal server error")
     }
   };
 
-  const SignInButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  const RegisterButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
     width: "100%",
     height: "40px",
@@ -238,9 +233,9 @@ const RegisterPage = () => {
                 },
               }}
             />
-            <SignInButton type="submit" >Đăng ký</SignInButton>
+            <RegisterButton type="submit" >Đăng ký</RegisterButton>
           <p className="text-white">
-            Bạn đã có tài khoản ? <Link href="/login" className="text-white underline">Đăng nhập</Link>
+            Bạn đã có tài khoản ? <Link href="/auth/login" className="text-white underline">Đăng nhập</Link>
           </p>
           <div className="flex items-center w-full">
             <hr className="h-px bg-neutral-500 border-none m-0 w-1/2"/>
