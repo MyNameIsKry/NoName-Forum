@@ -75,9 +75,8 @@ export class AuthService {
 
     public static async verify(data: VerifyBody) {
         const { email, code, username, password } = data;
-        console.log("Data: ", data);
         const verificationCode = cache.get<VerifyBody>("verification_code");
-        console.log(verificationCode)
+        
         if (verificationCode && verificationCode.email == email && verificationCode.code == code ) {
             const salt = await genSalt(10);
             const hashedPassword = await hash(password, salt);
@@ -101,13 +100,13 @@ export class AuthService {
     public static async login(data: LoginRequestBody) {
         try {
             const { email, password } = data;
-
+            
             if (!email || !password)
                 return { status: 400, error: "Invalid password or email" };
 
             const user = await prisma.user.findUnique({ where: { email } });
 
-            if (!user || !(compare(password, user.password!))) {
+            if (!user || !(await compare(password, user.password!))) {
                 return { status: 401, error: "Email hoặc password sai!" };
             }
     
