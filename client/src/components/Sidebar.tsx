@@ -7,7 +7,7 @@ const Sidebar = () => {
     <aside className="bg-gray-800 p-4 w-72 text-white rounded-xl h-fit">
       <nav>
         <ul>
-          <li className="mb-4"><a href="/">Bài viết mới</a></li>
+          <li className="mb-4"><a href="/">Trang chủ</a></li>
           <li className="mb-4"><a href="/">Tâm sự chuyện đời</a></li>
           <li className="mb-4"><a href="/">Mua bán</a></li>
         </ul>
