@@ -12,21 +12,12 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 
-interface IUserInfo {
-  username: string;
-  display_name: string;
-  bio: string | null;
-  avatar_url: string | null;
-  role: string;
-  registered_at: Date;
-}
-
-interface HeaderProps {
+interface IUserInfoProps {
   userData: IUserInfo | null;
 }
 
-const Header: React.FC<HeaderProps> = ({ userData }) => {
-  const imgUrl = userData?.avatar_url || default_avt;
+const Header: React.FC<IUserInfoProps> = ({ userData }) => {
+  const imgUrl = userData?.user?.avatar_url || default_avt;
 
   const RegisterButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
@@ -57,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ userData }) => {
               <h1 className='font-bold text-3xl'>LOGO</h1>
             </Link> 
           </div>
-          {!userData ? (
+          {!userData?.user ? (
             <div className='flex items-center gap-9 font-bold'>
               <Link href="/auth/login">
                 Đăng nhập
@@ -106,20 +97,20 @@ const Header: React.FC<HeaderProps> = ({ userData }) => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>
-                    <Link href="/">Hồ sơ</Link>
+                  <MenuItem onClick={handleClose} component={Link} href={`/user/${userData.user.username}`}>
+                    Hồ sơ
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link href="/">Bài viết của bạn</Link>
+                  <MenuItem onClick={handleClose} component={Link} href="/">
+                    Bài viết của bạn
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link href="/">Mật khẩu và bảo mật</Link>
+                  <MenuItem onClick={handleClose} component={Link} href="/">
+                    Mật khẩu và bảo mật
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link href="/">Điểm tương tác</Link>
+                  <MenuItem onClick={handleClose} component={Link} href="/">
+                    Điểm tương tác
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Link href="/">Cài đặt</Link>
+                  <MenuItem onClick={handleClose} component={Link} href="/">
+                    Cài đặt
                   </MenuItem>
                 </Menu>
               </div>
