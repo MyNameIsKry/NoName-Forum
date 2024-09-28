@@ -1,20 +1,26 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { UserService } from '../services/userService';
 
-interface IQuery {
+interface IParams {
     username: string;
 }
 
 export class UserController {
     constructor() {};
 
-    public static async getUserInfo(req: FastifyRequest<{ Querystring: IQuery }>, res: FastifyReply) {
+    public static async getUserInfo(req: FastifyRequest<{ Params: IParams }>, res: FastifyReply) {
         try {
-            const { username } = req.query;
+            const { username } = req.params;
             const userInfo = await UserService.getUserInfo(username);  
-            res.send(userInfo);
+            
+            if (userInfo.status >= 400) {
+                return res.status(userInfo.status).send({ status: userInfo.status, error: userInfo.error });
+            }
+
+            res.status(201).send(userInfo);
+
         } catch (error) {
-            res.status(500).send({ error: error });
+            res.status(500).send({ status: 500, error: error });
         }
     }
 
@@ -25,7 +31,11 @@ export class UserController {
             if (!userId)
                 return res.status(403).send({ error: "User is not authentiacted" })
             const userInfo = await UserService.getMyInfo(userId);
-            
+
+            if (userInfo.status >= 400) {
+                return res.status(userInfo.status).send({ status: userInfo.status, error: userInfo.error });
+            }
+
             res.status(200).send(userInfo);
 
         } catch(err) {
