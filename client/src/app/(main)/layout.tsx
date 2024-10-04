@@ -6,6 +6,9 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { lazy } from 'react';
 import { cookies } from 'next/headers';
+import { Box } from '@mui/material';
+import Grid from "@mui/material/Grid2";
+
 
 const Header = lazy(() => import('@/components/Header'));
 const Sidebar = lazy(() => import('@/components/Sidebar'));
@@ -48,16 +51,18 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.className} w-dvw h-dvh bg-gray-900 p-4`}>
-        <div className="flex flex-col h-full">
-          <Header userData={userData} />
-          <div className="flex flex-1">
-            <Sidebar />
-            <div className="flex-1 ml-4 overflow-auto">
-              {children}
-            </div>
-          </div>
-        </div>
+      <body className={`${inter.className} w-full h-full bg-gray-900 p-4`}>
+        <Header userData={userData}/>
+          <Grid container spacing={4}>
+            <Grid size={{ xs: 12, md: 3 }}>
+              <Sidebar/>
+            </Grid>
+            <Grid size={{ xs: 12, md: 9 }}>
+              <Box>
+                {children}
+              </Box>
+            </Grid>
+          </Grid>
       </body>
     </html>
   );
