@@ -17,7 +17,6 @@ export interface IPost {
     content: string;
     created_at: Date;
     updated_at: Date;
-    comments: IComment[];
     category_name: string;
 };
 
@@ -94,12 +93,9 @@ export class PostService {
                             avatar_url: true
                         }
                     },
-                    comments: {
+                    votes: {
                         select: {
-                            author_name: true,
-                            content: true,
-                            created_at: true,
-                            updated_at: true
+                            value: true
                         }
                     }
                 }
@@ -141,6 +137,11 @@ export class PostService {
                             created_at: true,
                             updated_at: true,
                             replies: true
+                        }
+                    },
+                    votes: {
+                        select: {
+                            value: true
                         }
                     }
                 }
@@ -198,6 +199,11 @@ export class PostService {
                             content: true,
                             created_at: true,
                             updated_at: true,
+                        }
+                    },
+                    votes: {
+                        select: {
+                            value: true
                         }
                     }
                 }

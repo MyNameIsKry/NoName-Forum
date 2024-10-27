@@ -20,12 +20,13 @@ const cache = createNodeCache(300);
 export class UserService {
     constructor() {}
 
-    public static async getUserInfo(username: string): Promise<IUserInfo | { error: string }> {
+    public static async getUserInfo(username: string): Promise<{ status: number, user?: IUserInfo, error?: string }> {
         const cacheUser = cache.get<IUserInfo>(`user_username:${username}`);
-
-        if (cacheUser)
-            return cacheUser;
-
+    
+        if (cacheUser) {
+            return { status: 200, user: cacheUser };
+        }
+    
         const user = await prisma.user.findUnique({ 
             where: { username },
             select: {
@@ -37,7 +38,9 @@ export class UserService {
                 registered_at: true,
                 posts: {
                     select: {
+                        id: true,
                         author_name: true,
+                        category_name: true,
                         title: true,
                         content: true,
                         created_at: true,
@@ -45,17 +48,21 @@ export class UserService {
                 },
             }
         });
-        if (!user) 
-            return { error: "Không tìm thấy username này!" };
+    
+        if (!user) {
+            return { status: 404, error: "Không tìm thấy username này!" };
+        }
+    
         cache.set(`user_username:${username}`, user);
-        return user;
+        return { status: 200, user };
     }
+    
 
-    public static async getMyInfo(userId: string): Promise<IUserInfo> {
+    public static async getMyInfo(userId: string): Promise<{ status: number, user?: IUserInfo, error?: string }> {
         const cacheMyInfo = cache.get<IUserInfo>(`myInfo_id:${userId}`);
 
         if (cacheMyInfo)
-            return cacheMyInfo;
+            return { status: 200, user: cacheMyInfo };
 
         const myInfo = await prisma.user.findUnique({
             where: { id: userId },
@@ -66,11 +73,23 @@ export class UserService {
                 avatar_url: true,
                 role: true,
                 registered_at: true,
+                // posts: {
+                //     select: {
+                //         author_name: true,
+                //         title: true,
+                //         content: true,
+                //         created_at: true,
+                //     }
+                // },
             }
         });
 
+        if (!myInfo) {
+            return { status: 401, error: "Unauthorized" };
+        }
+
         cache.set(`myInfo_id:${userId}`, myInfo);
-        return myInfo!;
+        return { status: 200, user: myInfo };
     }
 
     public static async changeDisplayName(userId: string, displayName: string) {
@@ -94,7 +113,7 @@ export class UserService {
             return { message: "Thay đổi display_name thành công!" };
         } catch (err) {
             console.log(err);
-            return {error: err instanceof Error ? err.message : "An unknown error occured" };
+            return {status: 500, error: err instanceof Error ? err.message : "An unknown error occured" };
         }
     }
 
@@ -112,7 +131,7 @@ export class UserService {
             return { message: "Thay đổi bio thành công" };
         } catch(err) {
             console.log(err);
-            return {error: err instanceof Error ? err.message : "An unknown error occured" };
+            return {status: 500, error: err instanceof Error ? err.message : "An unknown error occured" };
         }
     }
 }
