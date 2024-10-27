@@ -64,7 +64,7 @@ const UserProfile = async ({ params }: UserProfileProps) => {
 
       {
         posts.length > 0 ? posts.map(post => (
-          <Post key={post.id} title={post.title} avatar_url={`${userData.user?.avatar_url || default_avt}`} category_name={post.category_name} created_at={post.created_at}></Post>
+          <Post key={post.id} title={post.title} avatar_url={`${userData.user?.avatar_url || default_avt}`} category_name={post.category_name} created_at={post.created_at} author_name={post.author_name}></Post>
         )) :
           <Typography className='text-white text-center mt-2'>Không có bài viết nào</Typography>
       }

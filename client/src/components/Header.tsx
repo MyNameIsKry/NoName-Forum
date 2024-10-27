@@ -40,7 +40,7 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
   };
 
   return (
-    <header className="bg-gray-800 text-white p-2 mb-5 rounded-lg">
+    <header className="bg-gray-800 text-white mb-5 rounded-lg">
       <Toolbar>
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex gap-6 items-center">
@@ -59,10 +59,10 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
             </div>
           ) : (
             <div className='flex items-center gap-6 max-lg:hidden'>
-              <div className='bg-input-color p-4 rounded-lg cursor-pointer'>
+              <div className='bg-input-color p-1 rounded-lg cursor-pointer'>
                 <Email fontSize='large' />
               </div>
-              <div className='bg-input-color p-4 rounded-lg cursor-pointer'>
+              <div className='bg-input-color p-1 rounded-lg cursor-pointer'>
                 <Notifications fontSize='large' />
               </div>
               <div className='flex items-center bg-input-color p-2 rounded-lg gap-3 cursor-pointer'>
