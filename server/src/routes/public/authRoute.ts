@@ -6,4 +6,5 @@ export async function authRoutes(fastify: FastifyInstance) {
     fastify.post('/login', AuthController.login);
     fastify.post('/refresh', AuthController.refreshToken);
     fastify.post('/logout', AuthController.logout);
+    fastify.post("/verify", AuthController.verify);
 }

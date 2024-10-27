@@ -8,6 +8,7 @@ import { styled } from "@mui/material";
 import { purple } from "@mui/material/colors";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import Notification from "@/components/Notification";
 
 interface ILogin {
   email: string;
@@ -44,6 +45,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleCloseNoti = () => {
+    setErrorMessage(null);
+  }
+
   const SignInButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
     width: "100%",
@@ -62,7 +67,15 @@ const LoginPage = () => {
           onSubmit={handleSubmit}
         > 
             <h2 className="text-2xl font-bold text-center text-white">Đăng nhập</h2>
-            <p className="text-center text-red-600">{errorMessage}</p>
+            {
+              errorMessage && 
+                <Notification 
+                  message={errorMessage} 
+                  open={errorMessage ? true : false}
+                  onClose={handleCloseNoti}
+                  severity="error"
+                />
+            }
             <TextField
               label="Email"
               type="email"
@@ -154,7 +167,7 @@ const LoginPage = () => {
             Quên mật khẩu ?
           </p>
           <p className="text-white">
-            Người mới ? <Link href="/register" className="text-white underline">Tạo tài khoản</Link>
+            Người mới ? <Link href="/auth/register" className="text-white underline">Tạo tài khoản</Link>
           </p>
           <div className="flex items-center w-full">
             <hr className="h-px bg-neutral-500 border-none m-0 w-1/2"/>
