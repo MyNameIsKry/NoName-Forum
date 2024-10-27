@@ -1,6 +1,6 @@
 import { Typography, Paper, Box, Avatar, IconButton } from '@mui/material';
 import Image from 'next/image';
-import UpVote from "../../public/t.svg";
+import UpVote from "../../public/UpVote.svg";
 import DownVote from "../../public/DownVote.svg"
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
 
