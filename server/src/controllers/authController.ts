@@ -95,10 +95,9 @@ export class AuthController {
         }
     }
 
-    public static async logout(req: FastifyRequest, res: FastifyReply) {
+    public static async logout(req: FastifyRequest<{ Body: { refreshToken: string } }>, res: FastifyReply) {
         try {
-            const cookies = req.cookies;
-            const refreshToken = cookies && cookies.refreshToken;
+            const { refreshToken } = req.body;
     
             if (!refreshToken) {
                 return res.status(403).send({ error: "Token invalid!" });
@@ -107,6 +106,13 @@ export class AuthController {
             AuthService.logout(refreshToken);
     
             res.clearCookie("refreshToken", {
+                httpOnly: false,
+                sameSite: true,
+                secure: false,
+                path: "/"
+            })
+
+            res.clearCookie("accessToken", {
                 httpOnly: false,
                 sameSite: true,
                 secure: false,

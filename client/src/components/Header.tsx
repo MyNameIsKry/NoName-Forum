@@ -11,6 +11,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
+import axios from 'axios';
 
 interface IUserInfoProps {
   userData: IUserInfo | null;
@@ -38,6 +39,21 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = async () => {
+    const data = await axios.get("/api/getRefreshToken");
+    const refreshToken = data.data.refreshToken;
+
+    if (refreshToken) {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, { refreshToken: refreshToken },
+        {
+          withCredentials: true,
+          validateStatus: (status) => true
+        }
+      );
+      window.location.reload();
+    }
+  }
 
   return (
     <header className="bg-gray-800 text-white mb-5 rounded-lg">
@@ -90,7 +106,7 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
                     horizontal: 'left',
                   }}
                   keepMounted
-                  transformOrigin={{
+                  transformOrigin={{ 
                     vertical: 'top',
                     horizontal: 'left',
                   }}
@@ -101,16 +117,10 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
                     Hồ sơ
                   </MenuItem>
                   <MenuItem onClick={handleClose} component={Link} href="/">
-                    Bài viết của bạn
-                  </MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} href="/">
-                    Mật khẩu và bảo mật
-                  </MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} href="/">
-                    Điểm tương tác
-                  </MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} href="/">
                     Cài đặt
+                  </MenuItem>
+                  <MenuItem onClick={async ()=> {handleClose();await handleLogout()}} component={Link} href="/">
+                    Đăng xuất
                   </MenuItem>
                 </Menu>
               </div>
