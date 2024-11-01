@@ -2,7 +2,6 @@ import { Typography, Paper, Box } from '@mui/material';
 import Grid from "@mui/material/Grid2";
 import default_avt from "../../../../../public/avatar_default.jpg";
 import { fetchUserData } from '@/app/(main)/layout';
-import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Post from '@/components/Post';
 
@@ -18,7 +17,7 @@ const UserProfile = async ({ params }: UserProfileProps) => {
   if (!userData?.user) {
     return (
       <>
-        <div className='text-white text-center mt-10'>
+        <div className='text-white text-center mt-10 text-xl'>
           Không tìm thấy người dùng này
         </div>
       </>
