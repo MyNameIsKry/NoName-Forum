@@ -60,10 +60,10 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
           ) : (
             <div className='flex items-center gap-6 max-lg:hidden'>
               <div className='bg-input-color p-1 rounded-lg cursor-pointer'>
-                <Email fontSize='large' />
+                <Email fontSize='medium' />
               </div>
               <div className='bg-input-color p-1 rounded-lg cursor-pointer'>
-                <Notifications fontSize='large' />
+                <Notifications fontSize='medium' />
               </div>
               <div className='flex items-center bg-input-color p-2 rounded-lg gap-3 cursor-pointer'>
                 <IconButton
@@ -77,8 +77,8 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
                   <Image
                     src={imgUrl}
                     alt="User's Image"
-                    width={50}
-                    height={50}
+                    width={40}
+                    height={40}
                     className='rounded-3xl'
                   />
                 </IconButton>
