@@ -16,7 +16,13 @@ const UserProfile = async ({ params }: UserProfileProps) => {
   const userData = await fetchUserData(params.username);
 
   if (!userData?.user) {
-    return redirect("/auth/login");
+    return (
+      <>
+        <div className='text-white text-center mt-10'>
+          Không tìm thấy người dùng này
+        </div>
+      </>
+    )
   }
 
   const posts = userData.user.posts;
