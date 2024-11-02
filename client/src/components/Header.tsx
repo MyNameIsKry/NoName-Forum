@@ -51,7 +51,8 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
           validateStatus: (status) => true
         }
       );
-      window.location.reload();
+
+      window.location.href = "/";
     }
   }
 
