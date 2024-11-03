@@ -4,6 +4,7 @@ import Image from 'next/image';
 import UpVote from "../../public/UpVote.svg";
 import DownVote from "../../public/DownVote.svg"
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
+import { useRouter } from 'next/navigation';
 
 interface IPostProps {
     id: string;
@@ -12,7 +13,6 @@ interface IPostProps {
     category_name: string;
     created_at: Date;
     author_name: string;
-    onClick(): void;
 }
 
 const ConvertToCategoryName: Record<string, string> = {
@@ -20,11 +20,13 @@ const ConvertToCategoryName: Record<string, string> = {
     "tam-su": "Tâm sự",
 };
 
-const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, created_at, author_name, onClick }) => {
+const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, created_at, author_name }) => {
+    const router = useRouter();
+
     return (
         <Paper 
-            className="bg-gray-800 text-white p-4 rounded-lg w-full h-fit"
-            onClick={onClick}
+            className="bg-gray-800 text-white p-4 rounded-lg w-full h-fit cursor-pointer hover:bg-gray-700"
+            onClick={() => { router.push(`/post/${id}`) }}
         >
             <Box className="flex items-start justify-between">
                 <Box className="flex items-center gap-4">

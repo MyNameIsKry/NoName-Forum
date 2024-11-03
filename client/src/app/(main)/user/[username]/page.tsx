@@ -3,8 +3,7 @@ import Grid from "@mui/material/Grid2";
 import default_avt from "../../../../../public/avatar_default.jpg";
 import { fetchUserData } from '@/app/(main)/layout';
 import Image from 'next/image';
-import PostWrapper from '@/components/PostWrapper';
-import { redirect } from 'next/navigation';
+import Post from '@/components/Post';
 
 interface UserProfileProps {
   params: {
@@ -70,10 +69,9 @@ const UserProfile = async ({ params }: UserProfileProps) => {
 
       {
         posts.length > 0 ? posts.map(post => (
-          <PostWrapper 
+          <Post 
             key={post.id}
             id={post.id} title={post.title} avatar_url={`${userData.user?.avatar_url || default_avt}`} category_name={post.category_name} created_at={post.created_at} author_name={post.author_name}
-            onClick
           />
         )) :
           <Typography className='text-white text-center mt-2'>Không có bài viết nào</Typography>
