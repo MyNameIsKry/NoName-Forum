@@ -23,6 +23,16 @@ const ConvertToCategoryName: Record<string, string> = {
 const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, created_at, author_name }) => {
     const router = useRouter();
 
+    const handleAuthorClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); 
+        router.push(`/`);
+    };
+
+    const handleCategoryClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); 
+        router.push(`/`);
+    };
+
     return (
         <Paper 
             className="bg-gray-800 text-white p-4 rounded-lg w-full h-fit cursor-pointer hover:bg-gray-700"
@@ -32,7 +42,11 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
                 <Box className="flex items-center gap-4">
                     <Avatar alt={author_name} src={avatar_url} />
                     <Box>
-                        <Typography variant="h6" className="font-bold">
+                        <Typography 
+                            variant="h6" 
+                            className="font-bold cursor-pointer hover:underline"
+                            onClick={handleAuthorClick}
+                        >
                             {author_name}
                         </Typography>
                         <Typography variant="caption" className="text-gray-400">
@@ -40,7 +54,11 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
                         </Typography>
                     </Box>
                 </Box>
-                <Typography variant="caption" className="text-gray-400">
+                <Typography 
+                    variant="caption" 
+                    className="text-gray-400 cursor-pointer hover:underline"
+                    onClick={handleCategoryClick}
+                >
                     {ConvertToCategoryName[category_name] ?? category_name}
                 </Typography>
             </Box>
@@ -61,7 +79,6 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
                     <ModeCommentIcon className='text-white'/>
                 </IconButton>
             </Box>
-            
         </Paper>
     );
 };
