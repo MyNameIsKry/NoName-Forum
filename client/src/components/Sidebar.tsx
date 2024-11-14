@@ -15,7 +15,7 @@ const Sidebar = () => {
           <li className="mb-4"><a href="/">Mua bán</a></li>
         </ul>
         <div className="mt-6">
-          <CustomButton>
+          <CustomButton href='/post/create'>
             Tạo bài viết mới <FontAwesomeIcon icon={faArrowRight} className='h-4 w-4' /> 
           </CustomButton>
         </div>

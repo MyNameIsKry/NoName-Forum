@@ -12,5 +12,8 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/user/:path*'], // thêm các route cần bảo vệ
+  matcher: [
+    '/user/:path*',
+    '/post/:path*'
+  ], 
 };
