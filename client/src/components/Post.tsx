@@ -18,6 +18,7 @@ interface IPostProps {
 const ConvertToCategoryName: Record<string, string> = {
     "buon-ban": "Buôn bán",
     "tam-su": "Tâm sự",
+    "cong-nghe": "Công nghệ"
 };
 
 const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, created_at, author_name }) => {
