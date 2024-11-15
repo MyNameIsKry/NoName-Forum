@@ -1,6 +1,5 @@
 import { prisma } from "..";
-import { CategoryType } from "../types/category/categoryTypes";
-const allowedCategoryTypes: CategoryType[] = ["buon-ban", "tam-su", "hup-so"];
+const allowedCategoryTypes: CategoryType[] = ["buon-ban", "tam-su", "cong-nghe"];
 
 export class CategoryService {
     constructor() {}
