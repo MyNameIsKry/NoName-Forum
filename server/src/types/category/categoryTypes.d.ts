@@ -1,1 +1,1 @@
-export type CategoryType = "buon-ban" | "tam-su" | "hup-so";
+type CategoryType = "buon-ban" | "tam-su" | "cong-nghe";

@@ -1,6 +1,5 @@
 import { prisma } from "..";
 import { searchEngine } from "../utils/searchEngine";
-import { CategoryType } from "../types/category/categoryTypes";
 import { createNodeCache } from "../utils/createCache";
 
 export interface PostRequestBody {
@@ -41,7 +40,7 @@ export class PostService {
     constructor() {}
 
     public static async createPost(data: PostRequestBody) {
-        const allowedCategoryTypes: CategoryType[] = ["buon-ban", "tam-su", "hup-so"];
+        const allowedCategoryTypes: CategoryType[] = ["buon-ban", "tam-su", "cong-nghe"];
 
         try {
             const { authorId, authorName, title, content, categoryName } = data;

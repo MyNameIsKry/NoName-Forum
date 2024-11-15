@@ -1,6 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { PostService, PostRequestBody } from "../services/postService";
-import { CategoryType } from "../types/category/categoryTypes";
 
 export class PostController {
     constructor() {}
