@@ -1,3 +1,5 @@
+import { type } from "os";
+
 interface IRegister {
     email: string;
     username: string;
@@ -27,3 +29,5 @@ interface IUserInfo {
     }
     error?: string;
 }
+
+type NotiType = 'success' | 'error' | 'warning' | 'info';

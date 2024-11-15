@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { CustomButton } from '@/components/Button';
 import Notification from '@/components/Notification';
 import axios from "axios";
+import { NotiType } from '@/types';
 
 type CreatePost = {
     title: string;
@@ -10,8 +11,13 @@ type CreatePost = {
     categoryName: string;
 }
 
+type Noti = {
+    status: NotiType;
+    message: string;
+}
+
 const CreateNewPost = () => {
-    const [notiMessage, setNotiMessage] =  useState<string | null>(null);
+    const [notiMessage, setNotiMessage] =  useState<Noti | null>(null);
     const [createPost, setCreatePost] = useState<CreatePost>({
         title: "",
         content: "",
@@ -23,7 +29,10 @@ const CreateNewPost = () => {
         const { title, content, categoryName } = createPost;
 
         if (categoryName.length === 0)
-            setNotiMessage("Bạn chưa chọn danh mục cho bài đăng");
+            setNotiMessage({
+                status: "error",
+                message: "Bạn chưa chọn danh mục cho bài đăng"
+            });
         else {
             try {
                 const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/posts/`, createPost, {
@@ -37,7 +46,10 @@ const CreateNewPost = () => {
                   } 
 
                   if (res.status == 201)  {
-                    setNotiMessage("Đăng bài thành công")
+                    setNotiMessage({
+                        status: "success",
+                        message: "Đăng bài thành công"
+                    })
                     setCreatePost({
                         title: "",
                         content: "",
@@ -45,7 +57,10 @@ const CreateNewPost = () => {
                     })
                   }
             } catch {
-                setNotiMessage("Internal server error");
+                setNotiMessage({
+                    status: "error",
+                    message: "Internal server error"
+                });
             }
         }
         console.log({ title, content, categoryName });
@@ -60,10 +75,10 @@ const CreateNewPost = () => {
             {
                 notiMessage && 
                 <Notification
-                    message={notiMessage}
+                    message={notiMessage.message}
                     onClose={handleCloseNoti}
                     open={notiMessage ? true : false}
-                    severity='error'
+                    severity={notiMessage.status}
                 />
             }
             <h1 className="font-bold text-2xl mb-4">Tạo 1 bài viết mới</h1>
