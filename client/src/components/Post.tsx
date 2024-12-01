@@ -1,10 +1,12 @@
 "use client"
-import { Typography, Paper, Box, Avatar, IconButton } from '@mui/material';
+import React from 'react';
+import { Typography, Paper, Box, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
 import Image from 'next/image';
 import UpVote from "../../public/UpVote.svg";
 import DownVote from "../../public/DownVote.svg"
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import { useRouter } from 'next/navigation';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 interface IPostProps {
     id: string;
@@ -34,9 +36,21 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
         router.push(`/`);
     };
 
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation(); 
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation(); 
+        setAnchorEl(null);
+    };
+
     return (
         <Paper 
-            className="bg-gray-800 text-white p-4 rounded-lg w-full h-fit cursor-pointer hover:bg-gray-700"
+            className="bg-gray-800 text-white p-4 rounded-lg w-full h-fit cursor-pointer hover:bg-opacity-55"
             onClick={() => { router.push(`/post/${id}`) }}
         >
             <Box className="flex items-start justify-between">
@@ -50,18 +64,40 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
                         >
                             {author_name}
                         </Typography>
-                        <Typography variant="caption" className="text-gray-400">
-                            {new Date(created_at).toLocaleDateString("vi-VN")}
-                        </Typography>
                     </Box>
                 </Box>
-                <Typography 
-                    variant="caption" 
-                    className="text-gray-400 cursor-pointer hover:underline"
-                    onClick={handleCategoryClick}
+                <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    color="inherit"
+                    onClick={handleMenu}
                 >
-                    {ConvertToCategoryName[category_name] ?? category_name}
-                </Typography>
+                    <MoreHorizIcon className='text-white'/>
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  keepMounted
+                  transformOrigin={{ 
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>
+                    Chỉnh sửa
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    Xóa bài viết
+                  </MenuItem>
+                </Menu>
             </Box>
             <Box className="mt-4">
                 <Typography variant="h5" className="font-semibold">
@@ -79,6 +115,19 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
                 <IconButton>
                     <ModeCommentIcon className='text-white'/>
                 </IconButton>
+            </Box>
+            <Box>
+                <Typography variant="caption" className="text-gray-400">
+                        {new Date(created_at).toLocaleDateString("vi-VN")}
+                </Typography>
+                {" "}
+                <Typography 
+                    variant="caption" 
+                    className="text-gray-400 cursor-pointer hover:underline"
+                    onClick={handleCategoryClick}
+                >
+                    {ConvertToCategoryName[category_name] ?? category_name}
+                </Typography>
             </Box>
         </Paper>
     );

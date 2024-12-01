@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import axios from 'axios';
+import { IUserInfo } from "@/types";
 
 interface IUserInfoProps {
   userData: IUserInfo | null;
