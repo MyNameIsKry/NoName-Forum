@@ -17,6 +17,9 @@ import fastifyCors from '@fastify/cors'
 import "./lib/auth";
 import authMiddleware from './middlewares/authMiddleware'
 import isAdminMiddleware from './middlewares/isAdminMiddleware'
+import { createNodeCache } from './utils/createCache'
+
+export const cache = createNodeCache(300);
 
 const fastify = Fastify({
   logger: false

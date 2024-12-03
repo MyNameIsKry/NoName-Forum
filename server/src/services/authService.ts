@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import Joi from 'joi';
 import { UserPayLoad } from '../types/userPayLoad';
 import { sendVerificationCode } from '../utils/sendMail';
-import { createNodeCache } from '../utils/createCache';
+import { cache } from "..";
 
 export interface RegisterRequestBody {
     email: string;
@@ -26,8 +26,6 @@ export interface VerifyBody {
     username: string;
     password: string;
 }
-
-const cache = createNodeCache(60);
 
 export class AuthService {
     constructor() {}

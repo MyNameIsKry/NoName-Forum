@@ -1,6 +1,5 @@
 import { prisma } from "..";
 import { searchEngine } from "../utils/searchEngine";
-import { createNodeCache } from "../utils/createCache";
 
 export interface PostRequestBody {
     authorId?: string;
@@ -34,8 +33,6 @@ export interface IComment {
     updated_at: Date
 }
 
-const cache = createNodeCache(300);
-
 export class PostService {
     constructor() {}
 
@@ -63,7 +60,6 @@ export class PostService {
                 }
             });
 
-            cache.del("allPosts");
             return newPost;
         } catch(err) {
             console.log(err);
@@ -72,12 +68,7 @@ export class PostService {
     }
 
     public static async getAllPost(): Promise<IPost[] | { error: string }> {
-        try {
-            const cachePost = cache.get<IPost[]>("allPosts");
-
-            if (cachePost) 
-                return cachePost;
-            
+        try {     
             const allPosts = await prisma.post.findMany({
                 select:{
                     id: true,
@@ -100,7 +91,6 @@ export class PostService {
                 }
             });
 
-            cache.set("allPosts", allPosts);
             return allPosts;
         } catch(err) {
             console.log(err); 
@@ -109,11 +99,6 @@ export class PostService {
     }
 
     public static async getPostById(postId: string): Promise<IPost | { error: string }> {
-        const cachePostId = cache.get<IPost>(`post_id:${postId}`);
-
-        if (cachePostId) 
-            return cachePostId;
-
         try {
             const post = await prisma.post.findUnique({
                 where: { id: postId },
@@ -149,7 +134,6 @@ export class PostService {
             if (!post)
                 return { error: "Không tìm thấy id bài viết này" };
 
-            cache.set(`post_id:${postId}`, post);
             return post;
             
         } catch (err) {
@@ -175,12 +159,7 @@ export class PostService {
     }
 
     public static async getPostByCategory(categoryName: CategoryType): Promise<IPost[] | { error: string }> {
-        const cachePostCategory = cache.get<IPost[]>(`category_name:${categoryName}`);
-
-        if (cachePostCategory)
-            return cachePostCategory;
-
-        try {
+         try {
             const posts = await prisma.post.findMany({
                 where: {
                     category_name: categoryName
@@ -210,7 +189,6 @@ export class PostService {
             if (posts.length === 0)
                 return { error: `Không tìm thấy post theo category: ${categoryName}` };
 
-            cache.set(`category_name:${categoryName}`, posts);
             return posts;
         } catch(err) {  
             console.log(err);
