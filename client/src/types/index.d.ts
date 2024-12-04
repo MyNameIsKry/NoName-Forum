@@ -31,3 +31,17 @@ interface IUserInfo {
 }
 
 type NotiType = 'success' | 'error' | 'warning' | 'info';
+
+type DetailsPostType = {
+    title: string;
+    content: string;
+    author_name: string;
+    created_at: Date;
+    updated_at: Date;
+    category_name: string;
+    author: {
+        avatar_url: string;
+    };
+    comment?: any;
+    votes?: any;
+}
