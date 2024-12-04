@@ -1,12 +1,9 @@
 "use client"
 import React from 'react';
 import { Typography, Paper, Box, Avatar, IconButton, Menu, MenuItem } from '@mui/material';
-import Image from 'next/image';
-import UpVote from "../../public/UpVote.svg";
-import DownVote from "../../public/DownVote.svg"
-import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import { useRouter } from 'next/navigation';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import PostVotes from './PostVotes';
 
 interface IPostProps {
     id: string;
@@ -104,18 +101,7 @@ const Post: React.FC<IPostProps> = ({ id, title, avatar_url, category_name, crea
                     {title}
                 </Typography>
             </Box>
-            <Box className="flex items-center gap-1 mt-4 text-white">
-                <IconButton>
-                    <Image src={UpVote} priority alt="UpVote image" width={20} height={20}/>
-                </IconButton>
-                <Typography variant="body2">1</Typography>
-                <IconButton>
-                    <Image src={DownVote} priority alt="DownVote image" width={20} height={20}/>
-                </IconButton>
-                <IconButton>
-                    <ModeCommentIcon className='text-white'/>
-                </IconButton>
-            </Box>
+            <PostVotes />
             <Box>
                 <Typography variant="caption" className="text-gray-400">
                         {new Date(created_at).toLocaleDateString("vi-VN")}
