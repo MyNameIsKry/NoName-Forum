@@ -7,7 +7,7 @@ import { CustomButton } from './Button';
 
 const Sidebar = () => {
   return (
-    <aside className="bg-gray-800 p-4 w-72 text-white rounded-xl h-fit">
+    <aside className="bg-gray-800 p-4 w-72 text-white rounded-xl h-fit fixed">
       <nav>
         <ul>
           <li className="mb-4"><a href="/">Trang chủ</a></li>

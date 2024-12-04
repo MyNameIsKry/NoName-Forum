@@ -58,7 +58,7 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
   }
 
   return (
-    <header className="bg-gray-800 text-white mb-5 rounded-lg">
+    <header className="bg-gray-800 text-white mb-5 rounded-lg sticky top-4 shadow-md z-50">
       <Toolbar>
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex gap-6 items-center">
