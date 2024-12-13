@@ -4,6 +4,7 @@ import default_avt from "../../../../../public/avatar_default.jpg";
 import { fetchUserData } from '@/app/(main)/layout';
 import Image from 'next/image';
 import Post from '@/components/Post';
+import Bio from '../components/Bio';
 
 interface UserProfileProps {
   params: {
@@ -45,9 +46,7 @@ const UserProfile = async ({ params }: UserProfileProps) => {
                 </Typography>
               </Grid>
               <Grid size={6}>
-                <Typography variant="body1" className="mt-2">
-                  {userData.user.bio || "Không có mô tả"}
-                </Typography>
+                  <Bio content={userData.user.bio || "Không có mô tả"} />
               </Grid>
             </Grid>
           </Paper>
