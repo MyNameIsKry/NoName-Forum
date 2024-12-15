@@ -9,13 +9,15 @@ import axios from 'axios';
 
 const Bio = ({ content }: { content: string  | null; }) => {
   const [edit, setEdit] = React.useState<boolean>(false);
-  const [bio, setBio] = React.useState<string>("");
+  const [bio, setBio] = React.useState<string>(content || "Không có mô tả");
 
   const handleClose = () => {
     setEdit(false);
+  };
+  const handleOpen = () =>  {
+    setEdit(true)
     setBio("");
   };
-  const handleOpen = () => setEdit(true);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,7 +99,7 @@ const Bio = ({ content }: { content: string  | null; }) => {
             </Box>
           :
           <Typography variant="body1" className="mt-2"> 
-            {content || "Không có mô tả"} {" "} <IconButton aria-label='edit' className='text-white' onClick={handleOpen}><EditIcon/></IconButton>
+            {bio} {" "} <IconButton aria-label='edit' className='text-white' onClick={handleOpen}><EditIcon/></IconButton>
           </Typography>
         }
       </div>
