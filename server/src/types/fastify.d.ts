@@ -5,6 +5,7 @@ declare module 'fastify' {
     interface FastifyInstance {
       authMiddleware: any;
       isAdminMiddleware: any;
+      isTargetUserMiddleware: any;
     }
 }
 
