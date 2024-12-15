@@ -7,8 +7,8 @@ export default async function RootLayout({
   }>) {
   
     return (
-      <html lang="en" className="">
-        <body className={`bg-gray-900 p-4`}>
+      <html lang="en">
+        <body className='bg-gray-900 p-4'>
             {children}
         </body>
       </html>
