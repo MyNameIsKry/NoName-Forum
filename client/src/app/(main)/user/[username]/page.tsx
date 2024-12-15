@@ -5,6 +5,7 @@ import { fetchUserData } from '@/app/(main)/layout';
 import Image from 'next/image';
 import Post from '@/components/Post';
 import Bio from '../components/Bio';
+import UserDetails from '../components/UserDetails';
 
 interface UserProfileProps {
   params: {
@@ -26,6 +27,9 @@ const UserProfile = async ({ params }: UserProfileProps) => {
   }
 
   const posts = userData.user.posts;
+  const nickname = userData.user.display_name;
+  const role = userData.user.role;
+  const registeredDay = userData.user.registered_at;
 
   return (
     <div className='flex flex-col gap-4'>
@@ -46,23 +50,18 @@ const UserProfile = async ({ params }: UserProfileProps) => {
                 </Typography>
               </Grid>
               <Grid size={6}>
-                  <Bio content={userData.user.bio || "Không có mô tả"} />
+                  <Bio content={userData.user.bio} />
               </Grid>
             </Grid>
           </Paper>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
-          <Paper className="bg-gray-800 text-white p-4 rounded-lg h-full flex items-center">
-            <Box>
-              <Typography variant="body1">Nickname: {userData.user.display_name}</Typography>
-              <Typography variant="body1">Vai trò: {userData.user.role}</Typography>
-              <Typography variant="body1">Số bài viết đã đăng: {posts.length}</Typography>
-              <Typography variant="body1">Số điểm: 0</Typography>
-              <Typography variant="body1">
-                Ngày tạo tài khoản: {new Date(userData.user.registered_at).toLocaleDateString("vi-VN")}
-              </Typography>
-            </Box>
-          </Paper>
+          <UserDetails 
+            nickname={nickname}
+            role={role}
+            post={posts.length}
+            registeredDay={registeredDay}
+          />
         </Grid>
       </Grid>
 
