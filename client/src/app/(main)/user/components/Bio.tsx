@@ -5,35 +5,10 @@ import { Typography, IconButton, TextField, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { CustomButton } from '@/components/Button';
 import { grey, purple } from "@mui/material/colors"
-import axios from 'axios';
+import { useEdit } from '@/app/hooks/useEdit';
 
-const Bio = ({ content }: { content: string  | null; }) => {
-  const [edit, setEdit] = React.useState<boolean>(false);
-  const [bio, setBio] = React.useState<string>(content || "Không có mô tả");
-
-  const handleClose = () => {
-    setEdit(false);
-  };
-  const handleOpen = () =>  {
-    setEdit(true)
-    setBio("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const data = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/users/me/bio`, 
-      {
-        bio: bio,
-      },
-      {
-        withCredentials: true,
-        validateStatus: (status) => true
-      }
-    );
-    handleClose();
-    console.log(data);
-  }
+const Bio = ({ rootContent }: { rootContent: string  | null; }) => {
+  const { content, edit, handleOpen, handleClose, handleSubmit, setContent } = useEdit(rootContent || "Không có mô tả", 'bio');
 
   return (
       <div className='mt-2'>
@@ -50,8 +25,8 @@ const Bio = ({ content }: { content: string  | null; }) => {
                 variant="filled"
                 required
                 margin="normal"
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 InputProps={{
                   style: {
                     color: 'black', 
@@ -99,7 +74,7 @@ const Bio = ({ content }: { content: string  | null; }) => {
             </Box>
           :
           <Typography variant="body1" className="mt-2"> 
-            {bio} {" "} <IconButton aria-label='edit' className='text-white' onClick={handleOpen}><EditIcon/></IconButton>
+            {content} {" "} <IconButton aria-label='edit' className='text-white' onClick={handleOpen}><EditIcon/></IconButton>
           </Typography>
         }
       </div>
