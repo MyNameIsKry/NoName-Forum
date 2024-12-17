@@ -8,7 +8,7 @@ import { grey, purple } from "@mui/material/colors"
 import { useEdit } from '@/app/hooks/useEdit';
 
 const Bio = ({ rootContent }: { rootContent: string  | null; }) => {
-  const { content, edit, handleOpen, handleClose, handleSubmit, setContent } = useEdit(rootContent || "Không có mô tả", 'bio');
+  const { content, edit, handleSubmit, setContent, toggleEdit } = useEdit(rootContent || "Không có mô tả", 'bio');
 
   return (
       <div className='mt-2'>
@@ -68,13 +68,13 @@ const Bio = ({ rootContent }: { rootContent: string  | null; }) => {
                 >Lưu</CustomButton>
                 <CustomButton 
                   padding='3px 6px' backgroundcolor={grey[600]} hoverbackgroundcolor={grey[700]}
-                  onClick={handleClose}
+                  onClick={() => toggleEdit(false)}
                 >Hủy</CustomButton>
               </div>
             </Box>
           :
           <Typography variant="body1" className="mt-2"> 
-            {content} {" "} <IconButton aria-label='edit' className='text-white' onClick={handleOpen}><EditIcon/></IconButton>
+            {content} {" "} <IconButton aria-label='edit' className='text-white' onClick={() => toggleEdit(true)}><EditIcon/></IconButton>
           </Typography>
         }
       </div>
