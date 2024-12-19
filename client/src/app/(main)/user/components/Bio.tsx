@@ -6,12 +6,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import { CustomButton } from '@/components/Button';
 import { grey, purple } from "@mui/material/colors"
 import { useEdit } from '@/app/hooks/useEdit';
+import Notification from '@/components/Notification';
 
 const Bio = ({ rootContent }: { rootContent: string  | null; }) => {
-  const { content, edit, handleSubmit, setContent, toggleEdit } = useEdit(rootContent || "Không có mô tả", 'bio');
+  const { content, edit, success, notiContent, noti, handleSubmit, setContent, toggleEdit, handleNoti } = useEdit(rootContent || "Không có mô tả", 'bio');
 
   return (
       <div className='mt-2'>
+        {
+          noti &&
+          <Notification
+            message={notiContent}
+            onClose={handleNoti}
+            open={noti}
+            severity={success ? "success" : "error"}
+          />
+        }
         {
           edit ? 
             <Box

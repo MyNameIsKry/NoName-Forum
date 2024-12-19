@@ -63,7 +63,6 @@ const CreateNewPost = () => {
                 });
             }
         }
-        console.log({ title, content, categoryName });
     };
 
     const handleCloseNoti = () => {

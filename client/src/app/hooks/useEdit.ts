@@ -7,32 +7,33 @@ interface State {
     edit: boolean;
     content: string;
     success: boolean;
-    error: string | null;
+    noti: boolean;
+    notiContent: string;
 }
 
 type Action =
     { type: "TOGGLE_EDIT"; isOpen: boolean }
   | { type: "SET_CONTENT"; content: string }
-  | { type: "SET_ERROR"; error: string | null }
-  | { type: "SET_SUCCESS"; success: boolean };
+  | { type: "SET_SUCCESS_AND_NOTI"; success: boolean, content: string }
+  | { type: "SET_NOTI"; noti: boolean}
 
 type BodyType = { bio: string } | { displayName: string };
 
 const initialState: State = {
     edit: false,
     content: "",
-    error: null,
-    success: false
+    success: false,
+    noti: false,
+    notiContent: ""
 }
 
 const reducer = (state: State, action: Action) : State => {
     switch (action.type) {
         case "TOGGLE_EDIT": 
             return {
+                ...state,
                 edit: action.isOpen,
                 content: action.isOpen ? "" : state.content,
-                error: null,
-                success: false,
             };
         
         case "SET_CONTENT":
@@ -41,17 +42,17 @@ const reducer = (state: State, action: Action) : State => {
                 content: action.content
             };
         
-        case "SET_SUCCESS":
+        case "SET_SUCCESS_AND_NOTI":
             return {
                 ...state,
-                success: true
+                success: action.success,
+                notiContent: action.content,
             };
         
-        case "SET_ERROR":
+        case "SET_NOTI":
             return {
                 ...state,
-                error: action.error,
-                success: false
+                noti: action.noti
             }
     }
 }
@@ -69,15 +70,18 @@ export const useEdit = (initialContent: string, endpointType: endpointType) => {
         ...initialState,
         content: initialContent,
       });
-    
+
     const toggleEdit = (isOpen: boolean) => {
         dispatch({ type: "TOGGLE_EDIT", isOpen });
         if (!isOpen) dispatch({ type: "SET_CONTENT", content: initialContent });
     };
 
+    const handleNoti = () => dispatch({ type: "SET_NOTI", noti: !state.noti });
+
+    const handleNotiMessage = (content: string, success: boolean) => dispatch({ type: "SET_SUCCESS_AND_NOTI", content, success });
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        dispatch({ type: "SET_ERROR", error: null });
 
         try {
             const body = createBody(state.content, endpointType);
@@ -88,14 +92,18 @@ export const useEdit = (initialContent: string, endpointType: endpointType) => {
                     withCredentials: true,
                     validateStatus: (status) => true
                 }
-            );
-    
-            dispatch({ type: "SET_SUCCESS", success: true });
-            toggleEdit(false);
+            ).then(() => {
+                handleNoti();
+                handleNotiMessage("Chỉnh sửa thành công", true);
+                toggleEdit(false);
+            }).catch(() => {
+                handleNotiMessage("Đã có lỗi xảy ra", false);
+            })
 
         } catch (err) {
-            dispatch({ type: "SET_ERROR", error: err as string || "Đã xảy ra lỗi" });
+            dispatch({ type: "SET_SUCCESS_AND_NOTI", content: "Đã có lỗi xảy ra", success: false });
         }
+
     }
 
     return {
@@ -103,5 +111,6 @@ export const useEdit = (initialContent: string, endpointType: endpointType) => {
         setContent: (content: string) => dispatch({ type: "SET_CONTENT", content }),
         toggleEdit,
         handleSubmit,
+        handleNoti
     }
 }
