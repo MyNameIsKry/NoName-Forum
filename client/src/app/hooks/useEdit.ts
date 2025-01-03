@@ -96,6 +96,7 @@ export const useEdit = (initialContent: string, endpointType: endpointType) => {
                 handleNoti();
                 handleNotiMessage("Chỉnh sửa thành công", true);
                 toggleEdit(false);
+                window.location.reload();
             }).catch(() => {
                 handleNotiMessage("Đã có lỗi xảy ra", false);
             })
