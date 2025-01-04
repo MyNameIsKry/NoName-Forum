@@ -1,4 +1,4 @@
-export interface UserPayLoad {
+interface UserPayLoad {
     id: string;
     email: string;
     username: string;

@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyRequest, PassportUser } from 'fastify';
-import { UserPayLoad } from './userPayLoad';
 
 declare module 'fastify' {
     interface FastifyInstance {

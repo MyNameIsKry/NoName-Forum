@@ -4,7 +4,6 @@ import envConfig from '../config';
 import { GenerateToken } from '../utils/generateToken';
 import jwt from "jsonwebtoken";
 import Joi from 'joi';
-import { UserPayLoad } from '../types/userPayLoad';
 import { sendVerificationCode } from '../utils/sendMail';
 import { cache } from "..";
 

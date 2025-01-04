@@ -2,7 +2,6 @@ import fastifyPassport from "@fastify/passport";
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
 import envConfig from "../config";
 import { prisma } from "..";
-import { UserPayLoad } from "../types/userPayLoad";
 
 fastifyPassport.use("google", new GoogleStrategy({
     clientID: envConfig?.GOOGLE_CLIENT_ID as string,

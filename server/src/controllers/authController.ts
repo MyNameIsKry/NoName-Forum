@@ -52,7 +52,16 @@ export class AuthController {
                     sameSite: "lax",
                     secure: process.env.NODE_ENV === "production",
                     path: "/"
-                })
+                })  
+
+                const storeObj = {
+                    id: result.user?.id,
+                    username: result.user?.username,
+                    email: result.user?.email,
+                    role: result.user?.role
+                }
+
+                window.localStorage.setItem("user", JSON.stringify(storeObj));
     
                 res.status(201).send(result); 
         } catch (error) {

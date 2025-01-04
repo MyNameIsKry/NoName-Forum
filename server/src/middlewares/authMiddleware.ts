@@ -1,6 +1,5 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { UserPayLoad } from '../types/userPayLoad';
 
 async function authMiddleware(fastify: FastifyInstance) {
   fastify.decorate('authMiddleware', async (req: FastifyRequest, res: FastifyReply) => {
@@ -17,7 +16,7 @@ async function authMiddleware(fastify: FastifyInstance) {
       if (!decoded || typeof decoded !== 'object') {
         return res.status(403).send({ error: "Invalid Token" })
       }
-
+      
       req.user = decoded as UserPayLoad;
 
     } catch (error) {

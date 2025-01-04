@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import { UserPayLoad } from "../types/userPayLoad"
 import envConfig from "../config"
 
 type TokenType = "access_token" | "refresh_token"
