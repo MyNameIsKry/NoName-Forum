@@ -12,10 +12,15 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import axios from 'axios';
-import { IUserInfo } from "@/types";
 
 interface IUserInfoProps {
   userData: IUserInfo | null;
+}
+
+interface UserData {
+  id: string;
+  username: string;
+  role: string;
 }
 
 const Header: React.FC<IUserInfoProps> = ({ userData }) => {
@@ -30,6 +35,21 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
       backgroundColor: purple[700],
     },
   }));
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && userData?.user) {
+      try {
+        const user: UserData = {
+          id: userData.user.id,
+          username: userData.user.username,
+          role: userData.user.role
+        };
+        window.localStorage.setItem("user", JSON.stringify(user));
+      } catch (error) {
+        console.error("Failed to store user data:", error);
+      }
+    }
+  }, [userData]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

@@ -1,5 +1,3 @@
-import { type } from "os";
-
 interface IRegister {
     email: string;
     username: string;
@@ -19,6 +17,7 @@ interface IPost {
 interface IUserInfo {
     status: number;
     user?: {
+        id: string;
         username: string;
         display_name: string;
         bio: string | null;

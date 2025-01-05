@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Box, Typography, Paper } from "@mui/material";
+import { useEdit } from '@/app/hooks/useEdit';
 
 type UserDetailsProps = {
     nickname: string;

@@ -22,6 +22,7 @@ export class UserService {
         const user = await prisma.user.findUnique({ 
             where: { username },
             select: {
+                id: true,
                 username: true,
                 display_name: true,
                 bio: true,
@@ -40,7 +41,7 @@ export class UserService {
                 },
             }
         });
-    
+    console.log(user);
         if (!user) {
             return { status: 404, error: "Không tìm thấy username này!" };
         }
@@ -53,6 +54,7 @@ export class UserService {
         const myInfo = await prisma.user.findUnique({
             where: { id: userId },
             select: {
+                id: true,
                 username: true,
                 display_name: true,
                 bio: true,

@@ -8,7 +8,6 @@ import { lazy } from 'react';
 import { cookies } from 'next/headers';
 import { Box } from '@mui/material';
 import Grid from "@mui/material/Grid2";
-import { IUserInfo } from "@/types";
 
 const Header = lazy(() => import('@/components/Header'));
 const Sidebar = lazy(() => import('@/components/Sidebar'));
