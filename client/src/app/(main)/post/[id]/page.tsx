@@ -1,10 +1,10 @@
 import React from 'react'
 import axios from 'axios'
-import { DetailsPostType } from '@/types';
 import AuthorInfo from "@/components/AuthorInfo";
 import PostContent from "@/components/PostContent";
 import PostVotes from "@/components/PostVotes";
 import PostTitle from '@/components/PostTitle';
+import PostComment from '@/components/PostComment';
 
 const DetailsPost = async ({ params }: { params: { id: string } }) => {
     const fetchPost = async (id: string) => {
@@ -27,6 +27,7 @@ const DetailsPost = async ({ params }: { params: { id: string } }) => {
                 </div>
                 <PostContent content={post.content} />
                 <PostVotes/>
+                <PostComment/>
             </div>
         </>
     )

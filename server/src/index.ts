@@ -64,7 +64,7 @@ fastify.register(fastifySecureSession, {
     path: '/',
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 // 24 hours in seconds
+    maxAge: 30 * 60
   }
 });
 
