@@ -18,7 +18,6 @@ import "./lib/auth";
 import authMiddleware from './middlewares/authMiddleware'
 import isAdminMiddleware from './middlewares/isAdminMiddleware'
 import { createNodeCache } from './utils/createCache'
-import isTargetUserMiddleware from './middlewares/isTargetUserMiddleware'
 
 export const cache = createNodeCache(300);
 
@@ -69,7 +68,6 @@ fastify.register(fastifySecureSession, {
   }
 });
 
-isTargetUserMiddleware(fastify);
 authMiddleware(fastify);
 isAdminMiddleware(fastify);
 

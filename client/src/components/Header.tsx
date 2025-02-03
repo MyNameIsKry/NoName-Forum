@@ -44,7 +44,8 @@ const Header: React.FC<IUserInfoProps> = ({ userData }) => {
           username: userData.user.username,
           role: userData.user.role
         };
-        window.localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user));
+        
       } catch (error) {
         console.error("Failed to store user data:", error);
       }

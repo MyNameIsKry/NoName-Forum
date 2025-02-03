@@ -1,5 +1,6 @@
 import { useState, useReducer } from "react"
 import axios from "axios";
+import { getUserDataFromLocalStorage } from "@/Utils/Helpers";
 
 type endpointType = "display_name" | "bio";
 
@@ -17,7 +18,11 @@ type Action =
   | { type: "SET_SUCCESS_AND_NOTI"; success: boolean, content: string }
   | { type: "SET_NOTI"; noti: boolean}
 
-type BodyType = { bio: string } | { displayName: string };
+type BodyType = { 
+    bio: string;
+} | { 
+    displayName: string; 
+};
 
 const initialState: State = {
     edit: false,
@@ -58,8 +63,11 @@ const reducer = (state: State, action: Action) : State => {
 }
 
 const createBody = (content: string, endpointType: endpointType): BodyType => {
+    console.log(getUserDataFromLocalStorage());
     if (endpointType === "bio") {
-      return { bio: content };
+      return { 
+        bio: content 
+    };
     } else {
       return { displayName: content };
     }
@@ -96,7 +104,7 @@ export const useEdit = (initialContent: string, endpointType: endpointType) => {
                 handleNoti();
                 handleNotiMessage("Chỉnh sửa thành công", true);
                 toggleEdit(false);
-                window.location.reload();
+                //window.location.reload();
             }).catch(() => {
                 handleNotiMessage("Đã có lỗi xảy ra", false);
             })

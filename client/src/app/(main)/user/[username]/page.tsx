@@ -50,7 +50,7 @@ const UserProfile = async ({ params }: UserProfileProps) => {
                 </Typography>
               </Grid>
               <Grid size={6}>
-                  <Bio rootContent={userData.user.bio} />
+                  <Bio userData={userData} />
               </Grid>
             </Grid>
           </Paper>

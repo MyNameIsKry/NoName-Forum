@@ -53,7 +53,7 @@ export class AuthController {
                     secure: process.env.NODE_ENV === "production",
                     path: "/"
                 })  
-    
+
                 res.status(201).send(result); 
         } catch (error) {
             res.status(400).send({ error: error });

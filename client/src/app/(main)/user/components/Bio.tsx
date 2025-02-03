@@ -7,9 +7,18 @@ import { CustomButton } from '@/components/Button';
 import { grey, purple } from "@mui/material/colors"
 import { useEdit } from '@/app/hooks/useEdit';
 import Notification from '@/components/Notification';
+import { compareUserId, getUserDataFromLocalStorage } from '@/Utils/Helpers';
 
-const Bio = ({ rootContent }: { rootContent: string  | null; }) => {
-  const { content, edit, success, notiContent, noti, handleSubmit, setContent, toggleEdit, handleNoti } = useEdit(rootContent || "Không có mô tả", 'bio');
+interface IUserProps {
+  userData: IUserInfo;
+}
+
+const Bio: React.FC<IUserProps> = ({ userData }) => {
+  const { content, edit, success, notiContent, noti, handleSubmit, setContent, toggleEdit, handleNoti } = useEdit(userData.user?.bio || "Không có mô tả", 'bio');
+  
+  const userIdFromLocalStrg = getUserDataFromLocalStorage();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
 
   return (
       <div className='mt-2'>
@@ -84,7 +93,14 @@ const Bio = ({ rootContent }: { rootContent: string  | null; }) => {
             </Box>
           :
           <Typography variant="body1" className="mt-2"> 
-            {content} {" "} <IconButton aria-label='edit' className='text-white' onClick={() => toggleEdit(true)}><EditIcon/></IconButton>
+            {content}{" "} 
+            {mounted && compareUserId(userIdFromLocalStrg?.id, userData) && (
+              <span>
+                <IconButton aria-label="edit" className="text-white" onClick={() => toggleEdit(true)}>
+                  <EditIcon />
+                </IconButton>
+              </span>
+            )}
           </Typography>
         }
       </div>

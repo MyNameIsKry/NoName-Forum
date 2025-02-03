@@ -41,7 +41,7 @@ export class UserService {
                 },
             }
         });
-    console.log(user);
+        
         if (!user) {
             return { status: 404, error: "Không tìm thấy username này!" };
         }
