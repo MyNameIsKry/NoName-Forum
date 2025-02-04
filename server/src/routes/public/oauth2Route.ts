@@ -38,7 +38,8 @@ export async function oauth2Route(fastify: FastifyInstance) {
                 httpOnly: false,
                 sameSite: "lax",
                 secure: process.env.NODE_ENV === "production",
-                path: "/"
+                path: "/", 
+                maxAge: 60 * 30
               });
 
               reply.redirect("http://localhost:3000");  

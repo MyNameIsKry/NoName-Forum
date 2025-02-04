@@ -20,6 +20,7 @@ async function authMiddleware(fastify: FastifyInstance) {
       req.user = decoded as UserPayLoad;
 
     } catch (error) {
+      res.clearCookie("accessToken");
       res.status(500).send({ error: error instanceof Error ? error.message : "An unknown error occured" });
     }
   });
