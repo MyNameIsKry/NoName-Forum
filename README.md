@@ -1,7 +1,6 @@
 <h1 align="center">NoName Forum</h1>
 
-<details>
-<summary><h1>Vietnamese</h1></summary>
+<h1>Vietnamese</h1>
 
 ## Tổng quan
 - Một dự án diễn đàn có tên "NoName" - nền tảng thảo luận mở và tương tác cộng đồng.
@@ -62,15 +61,12 @@ git clone https://github.com/MyNameIsKry/NoName-Forum.git
 Project này thật sự chưa hoàn thiện, nếu có đóng góp gì cho project này, mọi người cứ thoải mái tạo **Pull Request**.
 
 ## Giấy phép
-Dự án này được cấp phép theo [LICENSE]("./LICENSE").
+Dự án này được cấp phép theo [LICENSE](./LICENSE).
 
 ## Liên hệ
 Đối với mọi thắc mắc, vui lòng mở issue.
 
-</details>
-
-<details>
-<summary><h1>English</h1></summary>
+<h1>English</h1>
 
 ## Overview
 * A forum project named "NoName" - an open discussion platform and community interaction.
@@ -120,9 +116,7 @@ git clone https://github.com/yourusername/NoName-Forum.git
 This project is still under development, and if you have any contributions, feel free to create a **Pull Request**.
 
 ## License
-This project is licensed under [LICENSE]("./LICENSE").
+This project is licensed under [LICENSE](./LICENSE).
 
 ## Contact
 For any inquiries, please open an issue.
-
-</details>
