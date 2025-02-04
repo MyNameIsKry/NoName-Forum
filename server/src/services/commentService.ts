@@ -10,10 +10,12 @@ export class CommentService {
             const comments = await prisma.comment.findMany({
                 where: { post_id: postId, parent_id: null },
                 select: {
+                    id: true,
                     author_name: true,
                     content: true,
                     replies: {
                         select: {
+                            id: true,
                             author_name: true,
                             content: true,
                             created_at: true,

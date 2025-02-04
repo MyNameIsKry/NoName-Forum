@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { CustomButton } from '@/components/Button';
 import Notification from '@/components/Notification';
 import axios from "axios";
-import { NotiType } from '@/types';
 
 type CreatePost = {
     title: string;

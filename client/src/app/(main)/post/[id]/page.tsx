@@ -27,7 +27,7 @@ const DetailsPost = async ({ params }: { params: { id: string } }) => {
                 </div>
                 <PostContent content={post.content} />
                 <PostVotes/>
-                <PostComment/>
+                <PostComment postId={params.id}/>
             </div>
         </>
     )

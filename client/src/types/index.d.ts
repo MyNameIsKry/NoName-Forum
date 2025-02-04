@@ -44,3 +44,23 @@ type DetailsPostType = {
     comment?: any;
     votes?: any;
 }
+
+type CommentType = {
+    id: string;
+    post_id: string;
+    parent_id: string | null;
+    author_id: string;
+    author_name: string;
+    content: string;
+    created_at: Date;
+    updated_at: Date;
+}
+
+interface IComment {
+    id: string
+    author_name: string,
+    content: string,
+    replies?: IRepliesComment[]
+    created_at: Date,
+    updated_at: Date
+}
