@@ -2,16 +2,20 @@ interface IRegister {
     email: string;
     username: string;
     password: string;
-    repeatPassword?: string;  
+    repeatPassword?: string;
 }
 
 interface IPost {
     id: string;
+    author_id?: string;
     author_name: string;
+    avatar_url?: string | null;
     category_name: string;
     title: string;
     content: string;
-    created_at: Date;
+    created_at: string;
+    score?: number;
+    commentsCount?: number;
 }
 
 interface IUserInfo {
@@ -24,7 +28,7 @@ interface IUserInfo {
         avatar_url: string | null;
         role: string;
         registered_at: Date;
-        posts: IPost[];
+        posts?: IPost[];
     }
     error?: string;
 }

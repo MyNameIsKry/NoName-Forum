@@ -1,7 +1,7 @@
 import { Typography, Paper, Box } from '@mui/material';
 import Grid from "@mui/material/Grid2";
 import default_avt from "../../../../../public/avatar_default.jpg";
-import { fetchUserData } from '@/app/(main)/layout';
+import { fetchUserData } from '@/lib/getCurrentUser';
 import Image from 'next/image';
 import Post from '@/components/Post';
 import Bio from '../components/Bio';
@@ -26,7 +26,7 @@ const UserProfile = async ({ params }: UserProfileProps) => {
     )
   }
 
-  const posts = userData.user.posts;
+  const posts = userData.user.posts ?? [];
   const nickname = userData.user.display_name;
   const role = userData.user.role;
   const registeredDay = userData.user.registered_at;

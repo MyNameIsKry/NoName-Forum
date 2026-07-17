@@ -32,11 +32,13 @@ export class UserService {
                 posts: {
                     select: {
                         id: true,
+                        author_id: true,
                         author_name: true,
                         category_name: true,
                         title: true,
                         content: true,
                         created_at: true,
+                        _count: { select: { comments: true } }
                     }
                 },
             }

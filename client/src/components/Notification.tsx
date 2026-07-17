@@ -1,4 +1,3 @@
-import { NotiType } from '@/types';
 import { Snackbar, Alert } from '@mui/material';
 
 interface NotificationProps {

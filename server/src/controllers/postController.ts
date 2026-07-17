@@ -1,19 +1,25 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { PostService, PostRequestBody } from "../services/postService";
 
+interface IGetPostsQuery {
+    offset?: string;
+    limit?: string;
+    category?: string;
+}
+
 export class PostController {
     constructor() {}
-    
+
     public static async createNewPost(req: FastifyRequest<{ Body: PostRequestBody }>, res: FastifyReply) {
         try {
             const { title, content, categoryName} = req.body;
             const authorId = req.user?.id;
             const authorName = req.user?.username;
-            
+
             if (!authorId || !authorName) return res.status(403).send({ error: "User is not authentiacted" });
-            
+
             const newPost = await PostService.createPost({ authorId, authorName, title, content, categoryName});
-            
+
             if ('error' in newPost)
                 res.status(400).send(newPost);
             else
@@ -24,7 +30,7 @@ export class PostController {
             console.log(err);
         }
     }
-    
+
     public static async getAllPost(req: FastifyRequest, res: FastifyReply) {
         try {
             const result = await PostService.getAllPost();
@@ -39,16 +45,48 @@ export class PostController {
         }
     }
 
+    public static async getHotPosts(req: FastifyRequest<{ Querystring: IGetPostsQuery }>, res: FastifyReply) {
+        try {
+            const offsetRaw = req.query?.offset;
+            const limitRaw = req.query?.limit;
+            const category = req.query?.category;
+
+            const offset = offsetRaw !== undefined ? Number(offsetRaw) : 0;
+            const limit = limitRaw !== undefined ? Number(limitRaw) : 20;
+
+            if (!Number.isFinite(offset) || offset < 0) {
+                return res.status(400).send({ error: "offset không hợp lệ" });
+            }
+            if (!Number.isFinite(limit) || limit < 1 || limit > 50) {
+                return res.status(400).send({ error: "limit phải trong khoảng 1..50" });
+            }
+
+            const result = await PostService.getHotPosts({
+                limit,
+                offset,
+                category: category || undefined
+            });
+
+            if ('error' in result)
+                return res.status(400).send(result);
+
+            return res.status(200).send(result);
+        } catch (err) {
+            console.log(err);
+            return res.status(500).send({ error: err instanceof Error ? err.message : "An unknown error occured" });
+        }
+    }
+
     public static async getPostById(req: FastifyRequest<{ Params: { postId: string } }>, res: FastifyReply) {
         try {
             const { postId } = req.params;
             const result = await PostService.getPostById(postId);
-            
+
             if ('error' in result)
                 res.status(400).send(result);
             else
                 res.status(200).send(result);
-            
+
         } catch (err) {
             console.log(err);
             res.status(500).send({error: err instanceof Error ? err.message : "An unknown error occured" });
@@ -60,7 +98,7 @@ export class PostController {
             const { postName } = req.query;
             if (!postName)
                 res.status(400).send({ error: "Vui lòng nhập tên bài viết muốn tìm" });
-            
+
             const result = await PostService.getPostByName(postName);
             if ('error' in result)
                 res.status(400).send(result);
@@ -78,7 +116,7 @@ export class PostController {
         try {
             const { categoryName } = req.params;
             const result = await PostService.getPostByCategory(categoryName);
-            
+
             if ("error" in result)
                 res.status(400).send(result);
             else

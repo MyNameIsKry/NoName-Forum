@@ -3,36 +3,15 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { lazy } from 'react';
-import { cookies } from 'next/headers';
 import { Box } from '@mui/material';
 import Grid from "@mui/material/Grid2";
+import { fetchUserData } from "@/lib/getCurrentUser";
 
 const Header = lazy(() => import('@/components/Header'));
 const Sidebar = lazy(() => import('@/components/Sidebar'));
 
 library.add(fas);
-
-export const fetchUserData = async (username?: string): Promise<IUserInfo | null> => {
-  const token = cookies().get("accessToken")?.value;
-  if (!token) return null;
-
-
-  try {
-    const endpoint = username 
-      ? `${process.env.NEXT_PUBLIC_API_URL}/users/${username}`
-      : `${process.env.NEXT_PUBLIC_API_URL}/users/me`;
-
-    const res = await axios.get<IUserInfo>(endpoint, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    return res.data;
-  } catch (error) {
-    return null;
-  }
-};
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +25,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userData = await fetchUserData(); 
+  const userData = await fetchUserData();
 
   return (
     <html lang="en">
